@@ -1,0 +1,19 @@
+﻿@model WebUI.Models.UsersAndRoles.RolesMenuViewModel
+@Html.ActionLink("All Users",  "Roles","Admin")
+
+
+@foreach (var link in Model.Roles)
+{    
+    @Html.RouteLink(link.Name, new
+    {
+        controller = "Admin",
+        action = "Roles",
+        roleId = link.Id,
+        page = 1
+    },
+    new {
+    @class = link.Id == Model.SelectedRoleId ? "selected" : null
+  })
+}
+
+ 

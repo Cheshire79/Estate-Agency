@@ -1,0 +1,170 @@
+﻿
+@using WebUI.Models.Realtor
+@model EditRealEstateView
+@{
+    ViewBag.Title = "CreateRealEstate";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create real estate</h2>
+
+@using (Html.BeginForm("EditRealEstate", "Realtor", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+     RealEstateToSaveView realEstate = Model.RealEstateForRealtor;
+    SelectList districts = new SelectList(Model.DataForManipulateRealEstate.Districts, "Id", "Name", Model.DataForManipulateRealEstate.ChoosenDistrict);
+    SelectList streets = new SelectList(Model.DataForManipulateRealEstate.Streets, "Id", "Name", Model.DataForManipulateRealEstate.ChoosenStreet);
+    SelectList roomsNumber = new SelectList(Model.DataForManipulateRealEstate.RoomNumbers, "Id", "Name", Model.DataForManipulateRealEstate.ChoosenRoomNumber);
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>CreateRealEstateView</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <label class="control-label col-md-2">District</label>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => realEstate.DistrictId, districts as SelectList, new { @class = "form-control", @id = "selected_districtId", @onchange = "FillSreets()" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Street</label>
+            <div class="col-md-10">
+                <div class="input-large-update-width">
+                    @Html.DropDownListFor(model => realEstate.StreetId, streets as SelectList, new { @class = "form-control", @id = "selected_streetId" })
+                </div>
+                @Html.ValidationMessageFor(model => realEstate.StreetId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Building, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Building,  new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Building, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Appartment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Appartment,  new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Appartment, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Floor, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Floor, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Floor, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Height, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Height, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Height, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Area, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Area, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Area, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => realEstate.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => realEstate.Price, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.RoomNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => realEstate.RoomNumber, roomsNumber as SelectList, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => realEstate.RoomNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => realEstate.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextAreaFor(model => realEstate.Description, htmlAttributes: new { @class = "form-control", @id = "textBox_description" })
+                @Html.ValidationMessageFor(model => realEstate.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Change image</label>
+
+            <div class="col-md-10">
+                <div class="editor-field">
+                    <input type="file" id="load_imag_button" name="uploadImage" onchange="readURL(this);" />
+                    @if (Model.RealEstateForRealtor.Image.Length > 0)
+                    {
+                        @Html.Raw("<img class='image' id='loaded-image' class='create_realEstate-image' "+
+                                  "src=\"data:image/jpeg;base64,"
+                                       + Convert.ToBase64String(realEstate.Image) + "\" alt='your image' />")
+                    }
+                    else
+                    {
+                        <img id="loaded-image" class="create_realEstate-image" src="" alt="your image" />
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+    @Html.HiddenFor(model => realEstate.Id)
+    @Html.HiddenFor(model => realEstate.Image)
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+}
+
+
+    <div>
+        <a href=@Model.DataForManipulateRealEstate.ReturnUrl>Back to real estate list</a>
+    </div>
+
+<script type="text/javascript">
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#loaded-image').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function FillSreets() {
+        var CategoryId = $('#selected_districtId').val();
+        $.ajax({
+            url: 'FillStreet',
+            type: "GET",
+            dataType: "JSON",
+            data: { districtId: CategoryId },
+            success: function (response) {
+                console.log(response);
+                $("#selected_streetId").html("");
+                $.each(response, function (index, value) {
+                    $("#selected_streetId").append(
+                        $('<option></option>').val(value.Id).html(value.Name));
+                });
+            }
+        });
+    }
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

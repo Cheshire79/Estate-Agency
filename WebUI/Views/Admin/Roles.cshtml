@@ -1,0 +1,88 @@
+﻿@using WebUI.HtmlHelpers
+@model WebUI.Models.UsersAndRoles.UsersInRoleViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="navbar-header">
+        @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "navbar-brand" })
+        @Html.ActionLink("Roles", "Roles", "Admin", null, new { @class = "navbar-brand" })
+    </div>
+</div>
+
+<div>
+    @if (TempData["message"] != null)
+    {
+        <div class="Message">@TempData["message"]</div>
+    }
+
+    <div id="headerRoles">
+        <div class="title">Roles STORE</div>
+    </div>
+    <div id="categoriesRoles">
+        @{ Html.RenderAction("RolesMenu", "Admin", new { roleId = Model.RoleId }); }
+        
+
+    </div>
+    <div id="contentRoles">
+        <p>
+            @if (Model.RoleId != null)
+            {
+                <a>
+                    @Html.ActionLink("Add User to role", "AddUsersForRole", new { roleId = Model.RoleId, returnUrl = Request.Url.PathAndQuery })
+                </a>
+            }
+        </p>
+        <table class="table">
+            <tr>
+                <td>
+                    Name
+                </td>
+                <td></td>
+                <td></td>
+            </tr>
+
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                    </td>
+                    @if (Model.RoleId != null)
+                    {
+                        <td>
+                            @using (Html.BeginForm("RemoveUserFromRole", "Admin", FormMethod.Post, new { onclick = "return confirm('Are sure wants to remove from role?');" }))
+                            {
+                                @Html.Hidden("roleId", Model.RoleId)
+                                @Html.Hidden("userId", item.Id)
+                                @Html.Hidden("returnUrl", Request.Url.PathAndQuery)
+                                <input type="submit" value="Remove" />
+                            }
+                        </td>
+                    }
+
+
+                </tr>
+            }
+
+        </table>
+
+
+
+        <div class="pager">
+            @Html.PageLinks(Model.PagingInfo, x => Url.Action("Roles",
+                 new { page = x, roleId = Model.RoleId }))
+        </div>
+    </div>
+
+
+
+
+
+
+</div>

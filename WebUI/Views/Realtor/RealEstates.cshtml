@@ -1,0 +1,198 @@
+﻿@using System.Globalization
+@using WebUI.HtmlHelpers
+@using WebUI.Models.Realtor
+@model DataAboutRealEstatesForRealtorView
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Kiev international realty</h2>
+@using (Html.BeginForm("RealEstates", "Realtor", FormMethod.Post, new { id = "searchForm" }))
+{
+
+    ChoosenSearchParametrsForRealtorView searchParametersForRealtor = new ChoosenSearchParametrsForRealtorView();
+    SelectList districts = new SelectList(Model.SearchParameters.Districts, "Id", "Name", Model.ChoosenSearchParametersForRealtor.DistrictId);
+    SelectList roomsNumber = new SelectList(Model.SearchParameters.RoomNumbers, "Id", "Name", Model.ChoosenSearchParametersForRealtor.RoomNumber);
+    SelectList sortedOrders = new SelectList(Model.SearchParameters.SortOrders, "Id", "Name", Model.ChoosenSearchParametersForRealtor.SortOrder);
+    <div class="realtor-searchArea">
+        <div class="title-right">
+            Available  <span class="bold_orange">@Model.PagingInfo.TotalItems</span> apartments (<span class="bold_orange">@Model.PagingInfo.TotalPages</span> pages)
+        </div>
+        <div class="title-main">
+            Search parameters
+        </div>
+        <div class="content01">
+            <div class="group01">
+                <div class="span5">
+                    <label class="input-mini-text">District</label>
+                    @Html.DropDownListFor(model => searchParametersForRealtor.DistrictId, districts as SelectList, new { @class = "input-large" })
+                </div>
+                <div class="span5">
+                    <label class="input-mini-text">Rooms amount</label>
+                    @Html.DropDownListFor(model => searchParametersForRealtor.RoomNumber, roomsNumber as SelectList, new { @class = "input-large" })
+                </div>
+                <div class="span5-3">
+                    <label>Created by my own</label>
+                    @Html.CheckBoxFor(model => searchParametersForRealtor.ShowOnlyMyOwn, new { @class = "input-mini" })
+                </div>
+            </div>
+            <div class="group02">
+                <div class="span3">
+                    <label class="input-mini-text">Area</label>
+                    <!--input name="flrfrom" value="" class="input-mini" type="text"-->
+                    @Html.TextBoxFor(model => searchParametersForRealtor.AreaFrom, new { @class = "input-mini", @id = "searchFormArea" })
+                    <!--input name="flrto" value="" class="input-mini" type="text"-->
+                    @Html.TextBoxFor(model => searchParametersForRealtor.AreaTo, new { @class = "input-mini" })
+                </div>
+                <div class="span3">
+                    <label class="input-mini-text">Price</label>
+                    @Html.TextBoxFor(model => searchParametersForRealtor.PriceFrom, "{0:#.#}", new { @class = "input-mini-price" })
+                    @Html.TextBoxFor(model => searchParametersForRealtor.PriceTo, new { @class = "input-mini-price" })
+                </div>
+                <div class="span3">
+                    <label class="input-mini-text">Floor</label>
+                    @Html.TextBoxFor(model => searchParametersForRealtor.FloorFrom, new { @class = "input-mini" })
+                    @Html.TextBoxFor(model => searchParametersForRealtor.FloorTo, new { @class = "input-mini" })
+                </div>
+                <div class="span3">
+                    <label class="input-mini-text">Height</label>
+                    @Html.TextBoxFor(model => searchParametersForRealtor.HeightFrom, new { @class = "input-mini" })
+                    @Html.TextBoxFor(model => searchParametersForRealtor.HeightTo, new { @class = "input-mini" })
+                </div>
+            </div>
+            @Html.HiddenFor(model => searchParametersForRealtor.Page, new { @id = "searchPage" })
+        </div>
+
+        <div class="realtor-sortArea">
+            <div class="span5">
+                <label>Sort </label>
+                @Html.DropDownListFor(model => searchParametersForRealtor.SortOrder, sortedOrders as SelectList, new { @class = "input-large", onchange = @"form.submit();" })
+            </div>
+            <div class="span-half-center">
+                <p class="createTitle">
+                    @Html.ActionLink("Reset filter", "RealEstates", new { ReturnUrl = Request.Url.PathAndQuery })
+                </p>
+            </div>
+        </div>
+
+        <div class="span-submit">
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Search" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pager">
+        @Html.PageLinksUsingSubmitForm(Model.PagingInfo, "javascript:PagerClick")
+    </div>
+}
+<p class="createTitle">
+    @Html.ActionLink("Create New", "CreateRealEstate", new { ReturnUrl = Request.Url.PathAndQuery })
+</p>
+
+@foreach (var realEstate in Model.RealEstates)
+{
+    int Id = realEstate.Id;
+    <div class="realtor-itemAreaView-content">
+
+        @if (realEstate.Image.Length > 0)
+        {
+            @Html.Raw("<img class='image' src=\"data:image/jpeg;base64,"
+                                                    + Convert.ToBase64String(realEstate.Image) + "\" />")
+        }
+
+        <div class="info">
+            <div class="column2_3">
+                <div class="item-address">
+                    @realEstate.StreetName @realEstate.Building, кв @realEstate.Appartment; @realEstate.DistrictName
+                </div>
+            </div>
+            <div class="column1_3">
+                <div class="item-price">
+                    @realEstate.Price.ToString("### ### ###", CultureInfo.CreateSpecificCulture("en-US"))
+                </div>
+            </div>
+            <div>
+                @realEstate.RoomNumber комн, @realEstate.Floor этаж, @realEstate.Height эт.,
+            </div>
+            <div>
+                площа @realEstate.Area м²
+            </div>
+            <div class="item-description">
+                @realEstate.Description
+            </div>
+            <div class="item-realtor">
+                РИЕЛТОР @realEstate.RealtorName ; @realEstate.RealtorEmail
+            </div>
+
+            <div>
+                дата добавления @realEstate.CreationDate.ToString("d")
+            </div>
+        </div>
+        @if (realEstate.IsOwner)
+        {
+            <!--div id="content2">Основное содержимое 2</div-->
+            <div class="span5">
+                @using (Html.BeginForm("EditRealEstate", "Realtor", FormMethod.Get))//, new { onclick = "return confirm('Are sure wants to edit ?');" }))
+                {
+                    @Html.HiddenFor(model => Id)
+                    <input type="submit" value="Edit" />
+                }
+            </div>
+            if (!realEstate.IsSold)
+            {
+
+                <div class="span5">
+                    @using (Html.BeginForm("MarkAsSold", "Realtor", FormMethod.Post, new { onclick = "return confirm('Are sure wants to mark as sold ?');" }))
+                    {
+                        @Html.HiddenFor(model => Id)
+                        <input type="submit" value="Mark as sold" />
+                    }
+                </div>
+            }
+            <div class="span5">
+                @using (Html.BeginForm("DeleteRealEstate", "Realtor", FormMethod.Post, new { onclick = "return confirm('Are sure wants to delete ?');" }))
+                {
+                    @Html.HiddenFor(model => Id)
+                    <input type="submit" value="Delete" />
+                }
+            </div>
+        }
+
+    </div>
+
+}
+
+<script type="text/javascript">
+    function PagerClick(page) {
+        $('#searchPage').val(page);
+
+        $("#searchForm").submit();
+    }
+    @*function PagerClick2(index) {
+
+        var p = {
+            Id: 1,
+            Name: 'Smith'
+        };
+        var theModel = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(@a1));
+            $.ajax({
+                url: 'Index',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(theModel),
+                success: function(result) {
+                    alert(result.data);
+                }
+            });
+    }*@
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+
+}
+
+
