@@ -11,8 +11,8 @@
 @using (Html.BeginForm("CreateRealEstate", "Realtor", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     RealEstateToSaveView realEstate = new RealEstateToSaveView();
-    SelectList districts = new SelectList(Model.Districts, "Id", "Name", Model.ChoosenDistrict);
-    SelectList streets = new SelectList(Model.Streets, "Id", "Name", Model.ChoosenStreet);
+    SelectList districts = new SelectList(Model.Districts, "Id", "Name", Model.ChoosenDistrictId);
+    SelectList streets = new SelectList(Model.Streets, "Id", "Name", Model.ChoosenStreetId);
     SelectList roomsNumber = new SelectList(Model.RoomNumbers, "Id", "Name", Model.ChoosenRoomNumber);
     @Html.AntiForgeryToken()
 

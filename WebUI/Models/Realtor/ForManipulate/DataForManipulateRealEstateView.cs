@@ -7,9 +7,9 @@ namespace WebUI.Models.Realtor.ForManipulate
         public List<CityDistrictDropItemView> Districts;
         public List<RoomNumberDropItemView> RoomNumbers;
         public List<StreetDropItemView> Streets;
-        public int ChoosenDistrict;
+        public int ChoosenDistrictId;
         public byte ChoosenRoomNumber;
-        public int ChoosenStreet;
+        public int ChoosenStreetId;
         public string ReturnUrl { get; set; }
     }
 }
