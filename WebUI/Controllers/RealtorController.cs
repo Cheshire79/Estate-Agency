@@ -41,7 +41,7 @@ namespace WebUI.Controllers
             await _realtorService.SetInitialData(userId);
 
             ChoosenSearchParametrsForRealtorView searchParameters = new ChoosenSearchParametrsForRealtorView();
-            DataAboutRealEstatesForRealtorView dataForRealtor = await PreparedRealEstates(searchParameters);
+            DataAboutRealEstatesForRealtorView dataForRealtor = await PreparedDataAboutRealEstates(searchParameters);
             return View(dataForRealtor);
         }
 
@@ -52,11 +52,11 @@ namespace WebUI.Controllers
             DataAboutRealEstatesForRealtorView dataForRealtor;
             if (ModelState.IsValid)
             {
-                dataForRealtor = await PreparedRealEstates(searchParametersForRealtor);
+                dataForRealtor = await PreparedDataAboutRealEstates(searchParametersForRealtor);
                 return View(dataForRealtor);
             }
             searchParametersForRealtor = new ChoosenSearchParametrsForRealtorView();
-            dataForRealtor = await PreparedRealEstates(searchParametersForRealtor);
+            dataForRealtor = await PreparedDataAboutRealEstates(searchParametersForRealtor);
             return View(dataForRealtor);
         }
 
@@ -131,14 +131,14 @@ namespace WebUI.Controllers
             throw new HttpException(400, "Invalid value of district Id");
         }
 
-        private async Task<DataAboutRealEstatesForRealtorView> PreparedRealEstates(ChoosenSearchParametrsForRealtorView choosenSearchParameters)
+        private async Task<DataAboutRealEstatesForRealtorView> PreparedDataAboutRealEstates(ChoosenSearchParametrsForRealtorView choosenSearchParameters)
         {
             ChoosenSearchParametersForRealtorDTO choosenSearchParametersDTO = _mapper.Map<ChoosenSearchParametrsForRealtorView, ChoosenSearchParametersForRealtorDTO>
                        (choosenSearchParameters);
             string userId = HttpContext.User.Identity.GetUserId();
             var users = await _identityService.GetUsers().ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToListAsync();
 
-            List<RealEstateForRealtorDTO> realEstatesDTO = await _realtorService.GetRealEstatesForRealtor(userId, choosenSearchParametersDTO)
+            List<RealEstateForRealtorDTO> realEstatesDTO = await _realtorService.FormRealEstates(userId, choosenSearchParametersDTO)
                 .Skip((choosenSearchParameters.Page - 1) * _pageSize)
                 .Take(_pageSize).ToListAsync();
 
@@ -156,12 +156,12 @@ namespace WebUI.Controllers
             {
                 ChoosenSearchParametersForRealtor = choosenSearchParameters,
                 RealEstates = realEstates,
-                SearchParameters = _mapper.Map<DataForSearchParametersDTO, DataForSearchParametersRealtorView>(await _realtorService.InitiateSearchParameters()),
+                SearchParameters = _mapper.Map<DataForSearchParametersRealtorDTO, DataForSearchParametersRealtorView>(await _realtorService.InitiateSearchParameters()),
                 PagingInfo = new PagingInfo
                 {
                     CurrentPage = choosenSearchParameters.Page,
                     ItemsPerPage = _pageSize,
-                    TotalItems = await _realtorService.GetRealEstatesForRealtor(userId, choosenSearchParametersDTO).CountAsync()
+                    TotalItems = await _realtorService.FormRealEstates(userId, choosenSearchParametersDTO).CountAsync()
                 }
             };
             return dataForRealtor;

@@ -18,18 +18,17 @@ namespace EstateAgency.BLL.Services
     {
         private IUnitOfWork _unitOfWork;
         private IMapper _mapper;
-        private IRealeEstateSort _realeEstateSort;
-        private int _cityKievId;
+        private IRealeEstateSort<RealEstateForRealtorDTO> _realeEstateSort;
+        private IRealEstatesDataMapper _realEstatesData;
 
-        public RealtorService(IUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort realeEstateSort)
+        public RealtorService(IUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapperFactory.CreateMapper();
             _realeEstateSort = realeEstateSort;
+            _realEstatesData = realEstatesData;
             var cityKiev = _unitOfWork.Cities.GetAll().FirstOrDefault(x => x.Name == "Киев");
-            if (cityKiev != null)
-                _cityKievId = cityKiev.Id;
-            else
+            if (cityKiev == null)
             {
                 throw new HttpException(404, "Cannot find Kiev. Working just for area of Kiev city.");
             }
@@ -332,21 +331,6 @@ namespace EstateAgency.BLL.Services
             }
         }
 
-        private IQueryable<CityDistrictDTO> GetKievDistricts()// just for Kiev city
-        {
-            return _unitOfWork.CityDistricts.GetAll().Where(x => x.CityId == _cityKievId).ProjectTo<CityDistrictDTO>(_mapper.ConfigurationProvider);
-        }
-
-        private IQueryable<RealEstateDTO> GetRealEstates()
-        {
-            return _unitOfWork.RealEstates.GetAll().ProjectTo<RealEstateDTO>(_mapper.ConfigurationProvider);
-        }
-
-        private IQueryable<StreetDTO> GetStreets()
-        {
-            return _unitOfWork.Streets.GetAll().ProjectTo<StreetDTO>(_mapper.ConfigurationProvider);
-        }
-
         public async Task<List<StreetDropDownItemDTO>> GetStreetsForDropDownByDistrctId(int districtId)
         {
             List<StreetDropDownItemDTO> streets = (await _unitOfWork.Streets.GetAll().Where(x => x.CityDistrictId == districtId).ProjectTo<StreetDropDownItemDTO>(_mapper.ConfigurationProvider).ToListAsync());
@@ -366,12 +350,12 @@ namespace EstateAgency.BLL.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public IQueryable<RealEstateForRealtorDTO> GetRealEstatesForRealtor(string userId, ChoosenSearchParametersForRealtorDTO parameters)
+        public IQueryable<RealEstateForRealtorDTO> FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters)
         {
             IQueryable<RealEstateForRealtorDTO> realEstates =
-                 (from realEstate in FilteredRealEstates(GetRealEstates(), parameters, userId)
-                  join street in GetStreets() on realEstate.StreetId equals street.Id
-                  join district in FilteredDistricts(GetKievDistricts(), parameters) on street.CityDistrictId equals district.Id
+                 from realEstate in FilteredRealEstates(_realEstatesData.RealEstates(), parameters, userId)
+                  join street in _realEstatesData.Streets() on realEstate.StreetId equals street.Id
+                  join district in FilteredDistricts(_realEstatesData.KievDistricts(), parameters) on street.CityDistrictId equals district.Id
                   select new RealEstateForRealtorDTO
                   {
                       Id = realEstate.Id,
@@ -392,16 +376,16 @@ namespace EstateAgency.BLL.Services
                       Image = realEstate.Image,
                       DistrictId = district.Id,
                       StreetId = street.Id
-                  });
-            return _realeEstateSort.Sort(parameters.SortOrder)(realEstates);
+                  };
+            return _realeEstateSort.Sort(parameters.SortOrder)(realEstates); ;
         }
 
         private async Task<RealEstateForRealtorDTO> FindRealEstateById(int id, string userId)
         {
             RealEstateForRealtorDTO realEstateForRealtor = await
-                (from realEstate in GetRealEstates()
-                 join street in GetStreets() on realEstate.StreetId equals street.Id
-                 join district in GetKievDistricts() on street.CityDistrictId equals district.Id
+                (from realEstate in _realEstatesData.RealEstates()
+                 join street in _realEstatesData.Streets() on realEstate.StreetId equals street.Id
+                 join district in _realEstatesData.KievDistricts() on street.CityDistrictId equals district.Id
                  where realEstate.Id == id
                  select new RealEstateForRealtorDTO
                  {
@@ -424,7 +408,6 @@ namespace EstateAgency.BLL.Services
                      DistrictId = district.Id,
                      StreetId = street.Id
                  }).FirstOrDefaultAsync();
-
             if (realEstateForRealtor == null)
                 throw new HttpException(404, "Cannot find real estate with id = " + id);
             return realEstateForRealtor;
@@ -469,14 +452,14 @@ namespace EstateAgency.BLL.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<DataForSearchParametersDTO> InitiateSearchParameters()
+        public async Task<DataForSearchParametersRealtorDTO> InitiateSearchParameters()
         {
-            var searchParameters = new DataForSearchParametersDTO();
+            var searchParameters = new DataForSearchParametersRealtorDTO();
             searchParameters.Districts = new List<CityDistrictDropDownItemDTO>() { new CityDistrictDropDownItemDTO() { Id = null, Name = "No matter" } };
-            searchParameters.Districts.AddRange(await GetKievDistricts().OrderBy(x => x.Name).Select(x => new CityDistrictDropDownItemDTO { Id = x.Id, Name = x.Name }).ToListAsync());
+            searchParameters.Districts.AddRange(await _realEstatesData.KievDistricts().OrderBy(x => x.Name).Select(x => new CityDistrictDropDownItemDTO { Id = x.Id, Name = x.Name }).ToListAsync());
             searchParameters.RoomNumbers = new List<RoomNumberDownItemDTO>()
                 { new RoomNumberDownItemDTO() { Id = null, Name = "No matter" }};
-            searchParameters.RoomNumbers.AddRange(GetRooms());
+            searchParameters.RoomNumbers.AddRange(_realEstatesData.Rooms());
 
             searchParameters.SortOrders = _realeEstateSort.GetSortingOptionsName();
             return searchParameters;
@@ -495,7 +478,7 @@ namespace EstateAgency.BLL.Services
 
         private void SetRoomsDataForRealEstateManipulate(DataForManipulateRealEstateDTO searchParameters, byte? specifiedRoomNumber)
         {
-            searchParameters.RoomNumbers = GetRooms();
+            searchParameters.RoomNumbers = _realEstatesData.Rooms();
             if (specifiedRoomNumber.HasValue)
                 searchParameters.ChoosenRoomNumber = specifiedRoomNumber.Value;
             else
@@ -504,7 +487,7 @@ namespace EstateAgency.BLL.Services
 
         private async Task SetDistrictsDataForRealEstateManipulate(DataForManipulateRealEstateDTO searchParameters, int? specifiedDistrictId)
         {
-            searchParameters.Districts = await GetKievDistricts().OrderBy(x => x.Name).Select(x => new CityDistrictDropDownItemDTO { Id = x.Id, Name = x.Name }).ToListAsync();
+            searchParameters.Districts = await _realEstatesData.KievDistricts().OrderBy(x => x.Name).Select(x => new CityDistrictDropDownItemDTO { Id = x.Id, Name = x.Name }).ToListAsync();
             if (searchParameters.Districts.Count == 0)
                 searchParameters.Districts.Add(new CityDistrictDropDownItemDTO() { Id = null, Name = "Empty List" });
 
@@ -533,20 +516,8 @@ namespace EstateAgency.BLL.Services
             }
             else
                 searchParameters.ChoosenStreetId = searchParameters.Streets.First().Id;
-
         }
 
-        private List<RoomNumberDownItemDTO> GetRooms()
-        {
-            return new List<RoomNumberDownItemDTO>()
-            {
-                new RoomNumberDownItemDTO(){Id=1,Name = "1"},
-                new RoomNumberDownItemDTO(){Id=2,Name = "2"},
-                new RoomNumberDownItemDTO(){Id=3,Name = "3"},
-                new RoomNumberDownItemDTO(){Id=4,Name = "4"},
-                new RoomNumberDownItemDTO(){Id=5,Name = "5"}
-            };
-        }
         private IQueryable<CityDistrictDTO> FilteredDistricts(IQueryable<CityDistrictDTO> districts, ChoosenSearchParametersForRealtorDTO parameters)
         {
             var result = districts;

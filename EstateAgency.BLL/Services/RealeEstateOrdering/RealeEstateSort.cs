@@ -7,27 +7,27 @@ using EstateAgency.BLL.Interface.Date.ForManipulate;
 
 namespace EstateAgency.BLL.Services.RealeEstateOrdering
 {
-    class PairedTextMethod
+    class PairedTextMethod<T>
     {
-        public PairedTextMethod(string text, Sorting method)
+        public PairedTextMethod(string text, Sorting<T> method)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             Method = method ?? throw new ArgumentNullException(nameof(method));
         }
 
         public string Text;
-        public Sorting Method;
+        public Sorting<T> Method;
     }
-    public class RealeEstateSort : IRealeEstateSort
+    public class RealeEstateSort<T> : IRealeEstateSort<T> where T : class, IRealEstateFieldsForSort
     {
-        private Dictionary<SortOrder, PairedTextMethod> _textAndFunctions = new Dictionary<SortOrder, PairedTextMethod>()
+        private Dictionary<SortOrder, PairedTextMethod<T>> _textAndFunctions = new Dictionary<SortOrder, PairedTextMethod<T>>()
         {
-            {SortOrder.ByDateNewOld, new PairedTextMethod("By date listed (new – old)", l => l.OrderByDescending(x => x.CreationDate))},
-            {SortOrder.ByDateOldNew, new PairedTextMethod("By date listed (old – new)", l => l.OrderBy(x => x.CreationDate))},
-            {SortOrder.ByPriceMinMax, new PairedTextMethod("By price (min – max)", l => l.OrderBy(x => x.Price))},
-            {SortOrder.ByPriceMaxMin, new PairedTextMethod("By price (max – min)", l => l.OrderByDescending(x => x.Price))},
-            {SortOrder.ByTotalAreaMinMax, new PairedTextMethod("Total area (min – max)", l => l.OrderBy(x => x.Area))},
-            {SortOrder.ByTotalAreaMaxMin, new PairedTextMethod("Total area (max – min)", l => l.OrderByDescending(x => x.Area))}
+            {SortOrder.ByDateNewOld, new PairedTextMethod<T>("By date listed (new – old)", l => l.OrderByDescending(x => x.CreationDate))},
+            {SortOrder.ByDateOldNew, new PairedTextMethod<T>("By date listed (old – new)", l => l.OrderBy(x => x.CreationDate))},
+            {SortOrder.ByPriceMinMax, new PairedTextMethod<T>("By price (min – max)", l => l.OrderBy(x => x.Price))},
+            {SortOrder.ByPriceMaxMin, new PairedTextMethod<T>("By price (max – min)", l => l.OrderByDescending(x => x.Price))},
+            {SortOrder.ByTotalAreaMinMax, new PairedTextMethod<T>("Total area (min – max)", l => l.OrderBy(x => x.Area))},
+            {SortOrder.ByTotalAreaMaxMin, new PairedTextMethod<T>("Total area (max – min)", l => l.OrderByDescending(x => x.Area))}
         };
 
         public List<SortOrderDropDownDTO> GetSortingOptionsName()
@@ -40,7 +40,7 @@ namespace EstateAgency.BLL.Services.RealeEstateOrdering
             return result;
         }
 
-        public Sorting Sort(SortOrder sortOrder)
+        public Sorting<T> Sort(SortOrder sortOrder)
         {
             return _textAndFunctions[sortOrder].Method;
         }

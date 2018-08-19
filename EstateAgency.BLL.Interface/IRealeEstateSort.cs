@@ -5,10 +5,10 @@ using EstateAgency.BLL.Interface.Date.ForManipulate;
 
 namespace EstateAgency.BLL.Interface
 {
-    public delegate IQueryable<RealEstateForRealtorDTO> Sorting(IQueryable<RealEstateForRealtorDTO> realEstates);
-    public interface IRealeEstateSort
+    public delegate IQueryable<T> Sorting<T>(IQueryable<T> realEstates);
+    public interface IRealeEstateSort<T> where T : class, IRealEstateFieldsForSort
     {
         List<SortOrderDropDownDTO> GetSortingOptionsName();
-        Sorting Sort(SortOrder sortOrder);
+        Sorting<T> Sort(SortOrder sortOrder);
     }
 }

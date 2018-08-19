@@ -44,7 +44,7 @@ namespace WebUI.Mapper
                 cfg.CreateMap<EditRealEstateDTO, EditRealEstateView>()
                     .ForMember(x => x.RealEstateForRealtor, x => x.MapFrom(m => m.RealEstate)); 
 
-                cfg.CreateMap<DataForSearchParametersRealtorView, DataForSearchParametersDTO>();
+                cfg.CreateMap<DataForSearchParametersRealtorView, DataForSearchParametersRealtorDTO>();
                 cfg.CreateMap<DataForManipulateRealEstateDTO, DataForManipulateRealEstateView>().ForMember(dest => dest.ReturnUrl, options => options.Ignore());
 
             });

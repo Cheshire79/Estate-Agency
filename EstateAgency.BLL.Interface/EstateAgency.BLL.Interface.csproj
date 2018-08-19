@@ -45,12 +45,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Date\ChoosenSearchParametersForRealtorDTO.cs" />
+    <Compile Include="Date\Client\ChoosenSearchParametersForClientDTO.cs" />
+    <Compile Include="Date\Client\DataForSearchParametersClientDTO.cs" />
+    <Compile Include="Date\Client\RealEstateForClientDTO.cs" />
     <Compile Include="Date\ForManipulate\CityDistrictDropDownItemDTO.cs" />
     <Compile Include="Date\CityDistrictDTO.cs" />
     <Compile Include="Date\CityDTO.cs" />
     <Compile Include="Date\ForManipulate\DataForManipulateRealEstateDTO.cs" />
     <Compile Include="Date\DataForEditRealEstateDTO.cs" />
-    <Compile Include="Date\DataForSearchParametersDTO.cs" />
+    <Compile Include="Date\DataForSearchParametersRealtorDTO.cs" />
+    <Compile Include="Date\IRealEstatesFieldForSort.cs" />
     <Compile Include="Date\RealEstateDTO.cs" />
     <Compile Include="Date\RealEstateForRealtorDTO.cs" />
     <Compile Include="Date\ForManipulate\RoomNumberDownItemDTO.cs" />
@@ -58,7 +62,9 @@
     <Compile Include="Date\ForManipulate\SortOrderDropDownDTO.cs" />
     <Compile Include="Date\ForManipulate\StreetDropDownItemDTO.cs" />
     <Compile Include="Date\StreetDTO.cs" />
+    <Compile Include="IClientService.cs" />
     <Compile Include="IMapperFactory.cs" />
+    <Compile Include="IRealEstatesDataMapper.cs" />
     <Compile Include="IRealeEstateSort.cs" />
     <Compile Include="IRealtorService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -67,5 +73,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

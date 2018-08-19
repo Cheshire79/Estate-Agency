@@ -8,6 +8,9 @@ using Identity.DAL.Repositories;
 using Identity.BLL.Services;
 using Identity.DAL.Interface;
 using EstateAgency.BLL.Interface;
+using EstateAgency.BLL.Interface.Date;
+using EstateAgency.BLL.Interface.Date.Client;
+using EstateAgency.BLL.Mapper;
 using EstateAgency.BLL.Services;
 using EstateAgency.DAL.EF;
 using EstateAgency.DAL.Infrastructure;
@@ -42,12 +45,12 @@ namespace WebUI.Infrastructure
         {
             AddBindingsForIdentityDAL();
             AddBindingsForIdentityBLL();
-            AddBindingsForKnowledgeManagementDAL();
-            AddBindingsForKnowledgeManagementBLL();
+            AddBindingsForEstateAgencyDAL();
+            AddBindingsForEstateAgencyBLL();
             _ninjectKernel.Bind<IMapperFactoryWEB>().To<MapperFactoryWEB>().InSingletonScope();
         }
 
-        private void AddBindingsForKnowledgeManagementDAL()
+        private void AddBindingsForEstateAgencyDAL()
         {
             _ninjectKernel.Bind<IDataContext>().To<DataContext>().WithConstructorArgument("connection", _connectionString);
 
@@ -56,14 +59,20 @@ namespace WebUI.Infrastructure
             _ninjectKernel.Bind<IReadOnlyRepository<CityDistrict>>().To<CityDistrictReadOnlyRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<Street>>().To<StreetReadOnlyRepository>();
 
+            _ninjectKernel.Bind<IRealEstatesDataMapper>().To<RealEstatesDataMapper>();
+
             _ninjectKernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
             _ninjectKernel.Bind<IFactoryRepository>().To<FactoryRepositor>();
         }
 
-        private void AddBindingsForKnowledgeManagementBLL()
+        private void AddBindingsForEstateAgencyBLL()
         {
             _ninjectKernel.Bind<IRealtorService>().To<RealtorService>();
-            _ninjectKernel.Bind<IRealeEstateSort>().To<RealeEstateSort>();
+            _ninjectKernel.Bind<IClientService>().To<ClientService>();
+            
+            _ninjectKernel.Bind<IRealeEstateSort<RealEstateForRealtorDTO>>().To<RealeEstateSort<RealEstateForRealtorDTO>>();
+            _ninjectKernel.Bind<IRealeEstateSort<RealEstateForClientDTO>>().To<RealeEstateSort<RealEstateForClientDTO>>();
+
             _ninjectKernel.Bind<EstateAgency.BLL.Interface.IMapperFactory>().To<EstateAgency.BLL.Mapper.MapperFactory>().InSingletonScope();
         }
 

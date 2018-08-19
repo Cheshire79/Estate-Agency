@@ -20,7 +20,6 @@ namespace EstateAgency.BLLTest
         [SetUp]
         public void SetUp()
         {
-
             var listCitis = new City[]
             {
                 new City() {Id = 1, Name = "Киев"},
@@ -35,7 +34,6 @@ namespace EstateAgency.BLLTest
                     return cityReadOnlyRepository.Object.GetAll().FirstOrDefault(x => x.Id == id);
                 });
 
-
             Mock<IReadOnlyRepository<CityDistrict>> cityDistrictReadOnlyRepository = new Mock<IReadOnlyRepository<CityDistrict>>();
             var listCityDistrict = new List<CityDistrict>();
             var city_1 = cityReadOnlyRepository.Object.GetAll().FirstOrDefault(x => x.Name == "Киев");
@@ -48,21 +46,18 @@ namespace EstateAgency.BLLTest
                     Name = "Троещина",
                     Id = cityDistrictId++
                 });
-
                 listCityDistrict.Add(new CityDistrict()
                 {
                     CityId = city_1.Id,
                     Name = "Шевченковский р-н",
                     Id = cityDistrictId++
                 });
-
                 listCityDistrict.Add(new CityDistrict()
                 {
                     CityId = city_1.Id,
                     Name = "Голосеевский р-н",
                     Id = cityDistrictId++
                 });
-
                 listCityDistrict.Add(new CityDistrict()
                 {
                     CityId = city_1.Id,
@@ -70,7 +65,6 @@ namespace EstateAgency.BLLTest
                     Id = cityDistrictId++
                 });
             }
-
             cityDistrictReadOnlyRepository.Setup(m => m.GetAll()).Returns(listCityDistrict.AsQueryable());
             cityDistrictReadOnlyRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(
                 (int id) =>
@@ -91,28 +85,24 @@ namespace EstateAgency.BLLTest
                     Name = "Чорновола ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_1.Id,
                     Name = "Саксаганского ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_1.Id,
                     Name = "Ружинская ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_1.Id,
                     Name = "Стеценко ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_1.Id,
@@ -122,7 +112,6 @@ namespace EstateAgency.BLLTest
             }
 
             var district_2 = cityDistrictReadOnlyRepository.Object.GetAll().FirstOrDefault(x => x.Name == "Днепровский р-н");
-
             if (district_2 != null)
             {
                 listStreet.Add(new Street()
@@ -131,21 +120,18 @@ namespace EstateAgency.BLLTest
                     Name = "Жмаченко генерала ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_2.Id,
                     Name = "Строителей ул.",
                     Id = streetId++
                 });
-
                 listStreet.Add(new Street()
                 {
                     CityDistrictId = district_2.Id,
                     Name = "Тампере ул.",
                     Id = streetId++
                 });
-
             }
 
             streetReadOnlyRepository.Setup(m => m.GetAll()).Returns(listStreet.AsQueryable());
@@ -234,7 +220,6 @@ namespace EstateAgency.BLLTest
                 });
             }
 
-
             realEstateRepository.Setup(m => m.GetAll()).Returns(listRealEstate.AsQueryable());
             realEstateRepository.Setup(x => x.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(
                 (int id) =>
@@ -248,17 +233,15 @@ namespace EstateAgency.BLLTest
             unitOfWork.Setup(x => x.CityDistricts).Returns(cityDistrictReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.Streets).Returns(streetReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.RealEstates).Returns(realEstateRepository.Object);
-
- 
-            _realtorService = new RealtorService(unitOfWork.Object, new MapperFactory(), new RealeEstateSort());
-
+            var mapperFactory =new MapperFactory();
+            _realtorService = new RealtorService(unitOfWork.Object, mapperFactory, new RealeEstateSort<RealEstateForRealtorDTO>(),new RealEstatesDataMapper(unitOfWork.Object, mapperFactory));
         }
 
         [Test]
         public void GetRealEstateAll()
         {
             int realEstateAmount=4;
-            var realEstate = _realtorService.GetRealEstatesForRealtor("", new ChoosenSearchParametersForRealtorDTO())
+            var realEstate = _realtorService.FormRealEstates("", new ChoosenSearchParametersForRealtorDTO())
                 .ToList();
             Assert.IsTrue(realEstate.Count == realEstateAmount);
         }
@@ -268,7 +251,7 @@ namespace EstateAgency.BLLTest
         {
             int filteredRealEstateAmount = 1;
             var searchParameters = new ChoosenSearchParametersForRealtorDTO() {PriceFrom = 50.000M, PriceTo = 60.000M};
-            var realEstate = _realtorService.GetRealEstatesForRealtor("", searchParameters).ToList();
+            var realEstate = _realtorService.FormRealEstates("", searchParameters).ToList();
             Assert.IsTrue(realEstate.Count == filteredRealEstateAmount);
         }
 
@@ -277,7 +260,7 @@ namespace EstateAgency.BLLTest
         {
             int filteredRealEstateAmount = 3;
             var searchParameters = new ChoosenSearchParametersForRealtorDTO() { PriceFrom = 36.000M, PriceTo = 56.000M };
-            var realEstate = _realtorService.GetRealEstatesForRealtor("", searchParameters).ToList();
+            var realEstate = _realtorService.FormRealEstates("", searchParameters).ToList();
             Assert.IsTrue(realEstate.Count == filteredRealEstateAmount);
         }
     }
