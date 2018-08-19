@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebUI.Models.Client
+namespace WebUI.Models.EstateAgency.Client
 {
     public class DataAboutRealEstatesForClientView
     {

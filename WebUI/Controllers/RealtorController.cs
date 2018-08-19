@@ -10,12 +10,14 @@ using AutoMapper.QueryableExtensions;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.ForManipulate;
+using EstateAgency.BLL.Interface.Date.Realtor;
 using Identity.BLL.Interface;
 using Microsoft.AspNet.Identity;
 using WebUI.Mapper;
 using WebUI.Models;
+using WebUI.Models.EstateAgency.ForManipulate;
+using WebUI.Models.EstateAgency.Realtor;
 using WebUI.Models.Realtor;
-using WebUI.Models.Realtor.ForManipulate;
 using WebUI.Models.UsersAndRoles;
 
 namespace WebUI.Controllers

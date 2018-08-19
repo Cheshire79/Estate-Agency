@@ -1,5 +1,5 @@
 ﻿
-namespace WebUI.Models.Realtor.ForManipulate
+namespace WebUI.Models.EstateAgency.ForManipulate
 {
     public class SortOrderDropItemView
     {

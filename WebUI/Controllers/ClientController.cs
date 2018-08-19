@@ -11,7 +11,7 @@ using Identity.BLL.Interface;
 using Microsoft.AspNet.Identity;
 using WebUI.Mapper;
 using WebUI.Models;
-using WebUI.Models.Client;
+using WebUI.Models.EstateAgency.Client;
 using WebUI.Models.UsersAndRoles;
 
 namespace WebUI.Controllers

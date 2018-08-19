@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date;
+using EstateAgency.BLL.Interface.Date.Realtor;
 using EstateAgency.BLL.Mapper;
 using EstateAgency.BLL.Services;
 using EstateAgency.BLL.Services.RealeEstateOrdering;

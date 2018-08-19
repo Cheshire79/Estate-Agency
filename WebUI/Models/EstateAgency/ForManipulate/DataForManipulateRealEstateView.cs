@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace WebUI.Models.Realtor.ForManipulate
+namespace WebUI.Models.EstateAgency.ForManipulate
 {
     public class DataForManipulateRealEstateView
     {

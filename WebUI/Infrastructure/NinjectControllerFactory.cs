@@ -10,6 +10,7 @@ using Identity.DAL.Interface;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.Client;
+using EstateAgency.BLL.Interface.Date.Realtor;
 using EstateAgency.BLL.Mapper;
 using EstateAgency.BLL.Services;
 using EstateAgency.DAL.EF;

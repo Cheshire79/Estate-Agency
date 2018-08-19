@@ -1,6 +1,6 @@
 using System;
 
-namespace EstateAgency.BLL.Interface.Date
+namespace EstateAgency.BLL.Interface.Date.Realtor
 {
     public class RealEstateForRealtorDTO : IRealEstateFieldsForSort
     {

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using WebUI.Models.Realtor.ForManipulate;
+using WebUI.Models.EstateAgency.ForManipulate;
 
-namespace WebUI.Models.Client
+namespace WebUI.Models.EstateAgency.Realtor
 {
-    public class DataForSearchParametersClientView
+    public class DataForSearchParametersRealtorView
     {
         public List<CityDistrictDropItemView> Districts;
         public List<RoomNumberDropItemView> RoomNumbers;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebUI.Models.Client
+namespace WebUI.Models.EstateAgency.Client
 {
     public class ChoosenSearchParametrsForClientView
     {

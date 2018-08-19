@@ -85,6 +85,7 @@ namespace EstateAgency.BLL.Services
             if (parameters.FloorTo.HasValue)
                 result = result.Where(x => x.Floor <= parameters.FloorTo);
 
+            result = result.Where(x => !x.IsSold);
             return result;
         }
 

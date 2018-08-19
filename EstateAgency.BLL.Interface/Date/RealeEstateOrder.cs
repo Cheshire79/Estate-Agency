@@ -1,4 +1,5 @@
 using System.Linq;
+using EstateAgency.BLL.Interface.Date.Realtor;
 
 namespace EstateAgency.BLL.Interface.Date
 {

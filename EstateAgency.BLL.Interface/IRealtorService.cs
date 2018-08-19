@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.ForManipulate;
+using EstateAgency.BLL.Interface.Date.Realtor;
 
 namespace EstateAgency.BLL.Interface
 {

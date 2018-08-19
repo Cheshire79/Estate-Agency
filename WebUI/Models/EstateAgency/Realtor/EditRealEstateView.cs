@@ -1,7 +1,8 @@
 ﻿
-using WebUI.Models.Realtor.ForManipulate;
+using WebUI.Models.EstateAgency.ForManipulate;
+using WebUI.Models.Realtor;
 
-namespace WebUI.Models.Realtor
+namespace WebUI.Models.EstateAgency.Realtor
 {
     public class EditRealEstateView
     {
