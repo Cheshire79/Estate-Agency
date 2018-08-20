@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IFilterForRealtor.cs" />
     <Compile Include="Date\Realtor\ChoosenSearchParametersForRealtorDTO.cs" />
     <Compile Include="Date\Client\ChoosenSearchParametersForClientDTO.cs" />
     <Compile Include="Date\Client\DataForSearchParametersClientDTO.cs" />
@@ -64,6 +65,7 @@
     <Compile Include="Date\StreetDTO.cs" />
     <Compile Include="IClientService.cs" />
     <Compile Include="IMapperFactory.cs" />
+    <Compile Include="IFilterForClient.cs" />
     <Compile Include="IRealEstatesDataMapper.cs" />
     <Compile Include="IRealeEstateSort.cs" />
     <Compile Include="IRealtorService.cs" />

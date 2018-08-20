@@ -21,13 +21,14 @@ namespace EstateAgency.BLL.Services
         private IMapper _mapper;
         private IRealeEstateSort<RealEstateForRealtorDTO> _realeEstateSort;
         private IRealEstatesDataMapper _realEstatesData;
-
-        public RealtorService(IUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData)
+        private IFilterForRealtor _filter;
+        public RealtorService(IUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData, IFilterForRealtor realEstateForRealtorFilter)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapperFactory.CreateMapper();
             _realeEstateSort = realeEstateSort;
             _realEstatesData = realEstatesData;
+            _filter = realEstateForRealtorFilter;
             var cityKiev = _unitOfWork.Cities.GetAll().FirstOrDefault(x => x.Name == "Киев");
             if (cityKiev == null)
             {
@@ -354,9 +355,9 @@ namespace EstateAgency.BLL.Services
         public IQueryable<RealEstateForRealtorDTO> FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters)
         {
             IQueryable<RealEstateForRealtorDTO> realEstates =
-                 from realEstate in FilteredRealEstates(_realEstatesData.RealEstates(), parameters, userId)
+                 from realEstate in _filter.FilteredRealEstates(_realEstatesData.RealEstates(), parameters, userId)
                   join street in _realEstatesData.Streets() on realEstate.StreetId equals street.Id
-                  join district in FilteredDistricts(_realEstatesData.KievDistricts(), parameters) on street.CityDistrictId equals district.Id
+                  join district in _filter.FilteredDistricts(_realEstatesData.KievDistricts(), parameters) on street.CityDistrictId equals district.Id
                   select new RealEstateForRealtorDTO
                   {
                       Id = realEstate.Id,
@@ -517,44 +518,6 @@ namespace EstateAgency.BLL.Services
             }
             else
                 searchParameters.ChoosenStreetId = searchParameters.Streets.First().Id;
-        }
-
-        private IQueryable<CityDistrictDTO> FilteredDistricts(IQueryable<CityDistrictDTO> districts, ChoosenSearchParametersForRealtorDTO parameters)
-        {
-            var result = districts;
-            if (parameters.DistrictId.HasValue)
-                result = result.Where(x => x.Id == parameters.DistrictId);
-            return result;
-        }
-
-        private IQueryable<RealEstateDTO> FilteredRealEstates(IQueryable<RealEstateDTO> realEstates, ChoosenSearchParametersForRealtorDTO parameters, string userId)
-        {
-            var result = realEstates;
-            if (parameters.RoomNumber.HasValue)
-                result = result.Where(x => x.RoomNumber == parameters.RoomNumber);
-            if (parameters.AreaFrom.HasValue)
-                result = result.Where(x => x.Area >= parameters.AreaFrom);
-            if (parameters.AreaTo.HasValue)
-                result = result.Where(x => x.Area <= parameters.AreaTo);
-
-            if (parameters.PriceFrom.HasValue)
-                result = result.Where(x => x.Price >= parameters.PriceFrom);
-            if (parameters.PriceTo.HasValue)
-                result = result.Where(x => x.Price <= parameters.PriceTo);
-
-            if (parameters.HeightFrom.HasValue)
-                result = result.Where(x => x.Height >= parameters.HeightFrom);
-            if (parameters.HeightTo.HasValue)
-                result = result.Where(x => x.Height <= parameters.HeightTo);
-
-            if (parameters.FloorFrom.HasValue)
-                result = result.Where(x => x.Floor >= parameters.FloorFrom);
-            if (parameters.FloorTo.HasValue)
-                result = result.Where(x => x.Floor <= parameters.FloorTo);
-
-            if (parameters.ShowOnlyMyOwn)
-                result = result.Where(x => x.RealtorId == userId);
-            return result;
         }
 
         public void Dispose()

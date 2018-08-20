@@ -8,7 +8,6 @@ using Identity.DAL.Repositories;
 using Identity.BLL.Services;
 using Identity.DAL.Interface;
 using EstateAgency.BLL.Interface;
-using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.Client;
 using EstateAgency.BLL.Interface.Date.Realtor;
 using EstateAgency.BLL.Mapper;
@@ -22,6 +21,8 @@ using Ninject;
 using Ninject.Web.Common;
 using WebUI.Mapper;
 using EstateAgency.BLL.Services.RealeEstateOrdering;
+using EstateAgency.BLL.Services.RealEstateForClientFiltering;
+using EstateAgency.BLL.Services.RealEstatetFiltering;
 
 namespace WebUI.Infrastructure
 {
@@ -73,6 +74,10 @@ namespace WebUI.Infrastructure
             
             _ninjectKernel.Bind<IRealeEstateSort<RealEstateForRealtorDTO>>().To<RealeEstateSort<RealEstateForRealtorDTO>>();
             _ninjectKernel.Bind<IRealeEstateSort<RealEstateForClientDTO>>().To<RealeEstateSort<RealEstateForClientDTO>>();
+            _ninjectKernel.Bind<IFilterForRealtor>().To<FilterForRealtor>();
+            _ninjectKernel.Bind<IFilterForClient>().To<FilterForClient>();
+            
+
 
             _ninjectKernel.Bind<EstateAgency.BLL.Interface.IMapperFactory>().To<EstateAgency.BLL.Mapper.MapperFactory>().InSingletonScope();
         }

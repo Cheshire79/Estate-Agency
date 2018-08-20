@@ -127,10 +127,17 @@
             <div class="item-realtor">
                 РИЕЛТОР @realEstate.RealtorName ; @realEstate.RealtorEmail
             </div>
-
-            <div>
+            <div class="column2_3">
                 дата добавления @realEstate.CreationDate.ToString("d")
             </div>
+            @if (realEstate.IsSold)
+    {
+        <div class="column1_3">
+            <div class="IsSold">
+                Продано !
+            </div>
+        </div>
+}
         </div>
         @if (realEstate.IsOwner)
         {

@@ -483,7 +483,7 @@ DIV#categoriesRoles a {
     background-color: #eee;
     background-color: #fffee1;
     margin-left: 185px;
-    min-height: 162px;
+    min-height: 170px;
     padding-left: 5px 
 }
 
@@ -504,44 +504,59 @@ DIV#categoriesRoles a {
 }
 .column1_3 {
     margin-left: 0;
-    width: 31.0%;
+    width: 33.120%;
     display: block;
     float: left;
-    margin-left: 2.127659574468085%;
     box-sizing: border-box;
     outline: 0 none;
-    text-align: right;
-    font-family: Arial,Helvetica,sans-serif;
-    font-size: 18px;
-    color: #2774c9;
-    font-weight: bold;
+  
 }
 
+    .column1_3 .item-price {
+        text-align: right;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 18px;
+        color: #2774c9;
+        font-weight: bold;
+        margin-right: 15px;
+        margin-left: 2.127659574468085%;
+    }
+
+.column1_3 .IsSold{
+        text-align: right;
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 18px;
+        color: #2774c9;
+        font-weight: bold;
+        margin-right: 15px;
+        margin-left: 2.127659574468085%;
+    }
+
+.column2_3 {
+    margin-left: 0;
+    width: 66.120%;
+    display: block;
+    float: left;
+    box-sizing: border-box;
+    outline: 0 none;
+}
 .column2_3 .item-address {
-    margin: 0px
+    margin-left: 2.127659574468085%;
+    color: #2774c9;
+    font-size: 13px;
+    font-weight: bold;
+    font-family: Arial,Helvetica,sans-serif;
 }
 
-.column1_3 .item-price {
-    margin-right: 15px
-}
 
 .info .item-realtor {
     font-weight: bold;
 }
 
-.column2_3 {
-    color: #2774c9;
-    font-size: 13px;
-    font-weight: bold;
-    font-family: Arial,Helvetica,sans-serif;
-    margin-left: 0;
-    width: 64.0%;
-    display: block;
-    float: left;
-    margin-left: 2.127659574468085%;
-    box-sizing: border-box;
-    outline: 0 none;
-}
+
+
+
+
 
 
 .client-itemAreaView-content {
