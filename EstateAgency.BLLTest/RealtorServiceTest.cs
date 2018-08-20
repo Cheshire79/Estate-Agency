@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using EstateAgency.BLL.Interface;
-using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.Realtor;
 using EstateAgency.BLL.Mapper;
 using EstateAgency.BLL.Services;
 using EstateAgency.BLL.Services.RealeEstateOrdering;
+using EstateAgency.BLL.Services.RealEstatetFiltering;
 using EstateAgency.DAL.Interface;
 using EstateAgency.DAL.Interface.Date;
 using Moq;
@@ -235,7 +235,7 @@ namespace EstateAgency.BLLTest
             unitOfWork.Setup(x => x.Streets).Returns(streetReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.RealEstates).Returns(realEstateRepository.Object);
             var mapperFactory =new MapperFactory();
-            _realtorService = new RealtorService(unitOfWork.Object, mapperFactory, new RealeEstateSort<RealEstateForRealtorDTO>(),new RealEstatesDataMapper(unitOfWork.Object, mapperFactory));
+            _realtorService = new RealtorService(unitOfWork.Object, mapperFactory, new RealeEstateSort<RealEstateForRealtorDTO>(),new RealEstatesDataMapper(unitOfWork.Object, mapperFactory),new FilterForRealtor());
         }
 
         [Test]
