@@ -77,6 +77,10 @@
       <Project>{023d0ab6-eb6c-4d39-a45a-3cc1606de8f6}</Project>
       <Name>EstateAgency.DAL.Interface</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EstateAgency.DAL\EstateAgency.DAL.csproj">
+      <Project>{617C1EE5-38A0-4D11-9BDF-07D22538B9E4}</Project>
+      <Name>EstateAgency.DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

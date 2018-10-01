@@ -10,7 +10,8 @@ namespace EstateAgency.DAL.Interface
         IReadOnlyRepository<City> Cities { get; }
         IReadOnlyRepository<CityDistrict> CityDistricts { get; }
         IReadOnlyRepository<Street> Streets { get; }
+		IUserReadOnlyRepository Users	{	get;	}
 
-        Task SaveAsync();
+			Task SaveAsync();
     }
 }

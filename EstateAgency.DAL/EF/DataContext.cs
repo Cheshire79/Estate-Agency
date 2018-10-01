@@ -1,4 +1,5 @@
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using EstateAgency.DAL.Entities;
 using EstateAgency.DAL.Interface;
@@ -12,7 +13,8 @@ namespace EstateAgency.DAL.EF
         public DataContext(string connection)
             : base(connection)
         {
-        }
+			Debug.WriteLine("DataContext KnowledgeManagement");
+		}
         public DbSet<City> Cities { get; set; }
         public DbSet<CityDistrict> CityDistricts { get; set; }
         public DbSet<Street> Streets { get; set; }

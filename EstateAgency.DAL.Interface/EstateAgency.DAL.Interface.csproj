@@ -70,6 +70,7 @@
     <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
     <Compile Include="IEstateAgencyUnitOfWork.cs" />
+    <Compile Include="IUserReadOnlyRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using EstateAgency.DAL.EF;
 using EstateAgency.DAL.Interface;
 using EstateAgency.DAL.Interface.Date;
 
@@ -9,7 +10,7 @@ namespace EstateAgency.DAL.Repository
         private IDataContext _db;
         private IEstateAgencyFactoryRepository _factoryRepository;
 
-        public EstateAgencyUnitOfWork(IEstateAgencyFactoryRepository factoryRepository, IDataContext db)
+        public EstateAgencyUnitOfWork(IEstateAgencyFactoryRepository factoryRepository, DataContext db)
         {
             _factoryRepository = factoryRepository;
             _db = db;
@@ -19,8 +20,16 @@ namespace EstateAgency.DAL.Repository
         private IReadOnlyRepository<City> _cityRepository;
         private IReadOnlyRepository<CityDistrict> _cityDistrictRepository;
         private IReadOnlyRepository<Street> _streetRepository;
+		public IUserReadOnlyRepository _usersRepository;
 
-        public IRepository<RealEstate> RealEstates
+
+		public IUserReadOnlyRepository Users
+		{
+			get { return _usersRepository ?? (_usersRepository = _factoryRepository.CreateUserRepository(_db)); }
+		}
+
+
+		public IRepository<RealEstate> RealEstates
         {
             get { return _realEstateRepository ?? (_realEstateRepository = _factoryRepository.CreateRealEstateRepository(_db)); }
         }

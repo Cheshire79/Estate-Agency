@@ -115,6 +115,7 @@
     <Compile Include="Repository\EstateAgencyUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Infrastructure\EstateAgencyFactoryRepository.cs" />
+    <Compile Include="Repository\UserReadOnlyRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

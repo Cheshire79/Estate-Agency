@@ -70,12 +70,6 @@ namespace WebUI.Controllers
             List<RealEstateForClientView> realEstates =
                 _mapper.Map<List<RealEstateForClientDTO>, List<RealEstateForClientView>>(realEstatesDTO);
 
-            realEstates = realEstates.Join(users, r => r.RealtorId, u => u.Id, (r, u) =>
-            {
-                r.RealtorName = u.Name;
-                r.RealtorEmail = u.Email;
-                return r;
-            }).ToList();
 
             DataAboutRealEstatesForClientView dataForRealtor = new DataAboutRealEstatesForClientView
             {

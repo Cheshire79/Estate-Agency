@@ -52,20 +52,26 @@ namespace WebUI.Infrastructure
 
         private void AddBindingsForEstateAgencyDAL()
         {
-			 _ninjectKernel.Bind<IDataContext>().To<DataContext>().WithConstructorArgument("connection", _connectionString);			
-			_ninjectKernel.Bind<DataContext>().To<DataContext>().InRequestScope().WithConstructorArgument(_connectionString);
+			
+			_ninjectKernel.Bind<DataContext>().To<DataContext>().InRequestScope()
+				.WithConstructorArgument(_connectionString);
+
+
 
 			_ninjectKernel.Bind<IEstateAgencyUnitOfWork>().To<EstateAgencyUnitOfWork>().InRequestScope();
 			_ninjectKernel.Bind<IIdentityUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope();
 
 			_ninjectKernel.Bind<IEstateAgencyFactoryRepository>().To<EstateAgencyFactoryRepositor>();
-
+//
 			_ninjectKernel.Bind<IRepository<RealEstate>>().To<RealEstateRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<City>>().To<CityReadOnlyRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<CityDistrict>>().To<CityDistrictReadOnlyRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<Street>>().To<StreetReadOnlyRepository>();
+			_ninjectKernel.Bind<IUserReadOnlyRepository>().To<UserReadOnlyRepository>();
+			
 
-            _ninjectKernel.Bind<IRealEstatesDataMapper>().To<RealEstatesDataMapper>();            	
+
+			_ninjectKernel.Bind<IRealEstatesDataMapper>().To<RealEstatesDataMapper>();            	
 
 			_ninjectKernel.Bind<IIdentityFactoryRepository>().To<IdentityFactoryRepository>();
 			
@@ -86,7 +92,7 @@ namespace WebUI.Infrastructure
             
 
 
-            _ninjectKernel.Bind<EstateAgency.BLL.Interface.IMapperFactory>().To<EstateAgency.BLL.Mapper.MapperFactory>().InSingletonScope();
+            _ninjectKernel.Bind<IMapperFactory>().To<MapperFactory>().InSingletonScope();
 
 			_ninjectKernel.Bind<IIdentityService>().To<IdentityService>();
 			_ninjectKernel.Bind<IIdentityMapperFactory>().To<IdentityMapperFactory>().InSingletonScope();
