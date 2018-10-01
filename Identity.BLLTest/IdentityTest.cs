@@ -1,17 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Identity.BLL.Interface;
-using Identity.DAL.Entities;
-using Identity.DAL.Repositories;
-using Identity.BLL.Interface.Data.Validation;
-using Identity.BLL.Mapper;
-using Identity.BLL.Services;
-using Identity.DAL.Interface;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Moq;
 using NUnit.Framework;
 using Microsoft.AspNet.Identity;
+using EstateAgency.DAL.Interface.Identity;
+using EstateAgency.DAL.Entities;
+using EstateAgency.BLL.Identity.Interface;
+using EstateAgency.BLL.Identity.Interface.Data.Validation;
+using EstateAgency.BLL.Identity.Services;
+using Identity.BLL.Mapper;
 
 namespace Identity.BLLTest
 {
@@ -19,21 +18,18 @@ namespace Identity.BLLTest
     [TestFixture]
     public class IdentityTest
     {
-        Mock<IIdentityUnitOfWork<ApplicationUserManager, ApplicationRoleManager>> _uow;
-        Mock<ApplicationUserManager> _userManager;
-        Mock<ApplicationRoleManager> _roleManager;
+       
         IIdentityService service;
 
         [SetUp]
         public void SetUp()
-        {
-            var roles = new List<ApplicationRole>()
+        {			
+			var roles = new List<ApplicationRole>()
             {
                 new ApplicationRole(){Id = "1",Name = "admin"},
                 new ApplicationRole(){Id = "2",Name = "user"},
                 new ApplicationRole(){Id = "3",Name = "manager"}
             }.AsQueryable();
-
             var users = new List<ApplicationUser>()
             {
                 new ApplicationUser(){Id = "1",UserName = "Admin",
@@ -49,37 +45,42 @@ namespace Identity.BLLTest
                 new ApplicationUser(){Id = "4",UserName = "33",
                     Roles = { new IdentityUserRole(){ RoleId = "2"} } },
             }.AsQueryable();
+			
+			Mock<IUserRepository> userRepository;
+			Mock<IRoleRepository> roleRepository;
+			userRepository = new Mock<IUserRepository>();
+            roleRepository = new Mock<IRoleRepository>();
 
-            _userManager = new Mock<ApplicationUserManager>(new UserStore<ApplicationUser>());
-            _roleManager = new Mock<ApplicationRoleManager>(new RoleStore<ApplicationRole>());
+            roleRepository.Setup(m => m.Roles()).Returns(roles.AsQueryable());
+            userRepository.Setup(m => m.Users()).Returns(users.AsQueryable());
 
-            _roleManager.Setup(m => m.Roles).Returns(roles.AsQueryable());
-            _userManager.Setup(m => m.Users).Returns(users.AsQueryable());
+            roleRepository.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(
+                (string id) => { return roleRepository.Object.Roles().FirstOrDefault(x => x.Id == id); });
 
-            _roleManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(
-                (string id) => { return _roleManager.Object.Roles.FirstOrDefault(x => x.Id == id); });
+            userRepository.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(
+                (string id) => { return userRepository.Object.Users().FirstOrDefault(x => x.Id == id); });
 
-            _userManager.Setup(x => x.FindByIdAsync(It.IsAny<string>())).ReturnsAsync(
-                (string id) => { return _userManager.Object.Users.FirstOrDefault(x => x.Id == id); });
-
-            _userManager.Setup(x => x.DeleteAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(
+            userRepository.Setup(x => x.DeleteAsync(It.IsAny<ApplicationUser>())).ReturnsAsync(
                 (ApplicationUser user) =>
                 {
-                    if (_userManager.Object.Users.Contains(user))
+                    if (userRepository.Object.Users().Contains(user))
                         return IdentityResult.Success;
                     return IdentityResult.Failed("Error");
                 });
 
-            _roleManager.As<IQueryable<ApplicationRole>>().Setup(m => m.Expression).Returns(roles.Expression);
-            _roleManager.As<IQueryable<ApplicationRole>>().Setup(m => m.ElementType).Returns(roles.ElementType);
-            _roleManager.As<IQueryable<ApplicationRole>>().Setup(m => m.GetEnumerator()).Returns(roles.GetEnumerator());
+            roleRepository.As<IQueryable<ApplicationRole>>().Setup(m => m.Expression).Returns(roles.Expression);
+            roleRepository.As<IQueryable<ApplicationRole>>().Setup(m => m.ElementType).Returns(roles.ElementType);
+            roleRepository.As<IQueryable<ApplicationRole>>().Setup(m => m.GetEnumerator()).Returns(roles.GetEnumerator());
 
-            _uow = new Mock<IIdentityUnitOfWork<ApplicationUserManager, ApplicationRoleManager>>();
-            _uow.Setup(u => u.UserManager).Returns(_userManager.Object);
-            _uow.Setup(u => u.RoleManager).Returns(_roleManager.Object);
+			Mock<IIdentityUnitOfWork> uow;
+			uow = new Mock<IIdentityUnitOfWork>();
+            uow.Setup(u => u.UserRepository).Returns(userRepository.Object);
+            uow.Setup(u => u.RoleRepository).Returns(roleRepository.Object);
+
+
             //   uow.Setup(u => u.SaveAsync()).Returns(Task.Run(() => { }));
 
-            service = new IdentityService(_uow.Object, new MapperFactory());
+            service = new IdentityService(uow.Object, new IdentityMapperFactory());
         }
 
 

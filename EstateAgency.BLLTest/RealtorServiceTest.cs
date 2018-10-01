@@ -228,7 +228,7 @@ namespace EstateAgency.BLLTest
                     return realEstateRepository.Object.GetAll().FirstOrDefault(x => x.Id == id);
                 });
 
-            var unitOfWork = new Mock<IUnitOfWork>();
+            var unitOfWork = new Mock<IEstateAgencyUnitOfWork>();
 
             unitOfWork.Setup(x => x.Cities).Returns(cityReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.CityDistricts).Returns(cityDistrictReadOnlyRepository.Object);

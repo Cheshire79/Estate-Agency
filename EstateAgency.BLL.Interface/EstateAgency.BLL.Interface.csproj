@@ -44,6 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Identity\Data\Role.cs" />
+    <Compile Include="Identity\Data\User.cs" />
+    <Compile Include="Identity\Data\Validation\OperationDetails.cs" />
+    <Compile Include="Identity\IIdentityService.cs" />
+    <Compile Include="Identity\IIdentityMapperFactory.cs" />
     <Compile Include="IFilterForRealtor.cs" />
     <Compile Include="Date\Realtor\ChoosenSearchParametersForRealtorDTO.cs" />
     <Compile Include="Date\Client\ChoosenSearchParametersForClientDTO.cs" />

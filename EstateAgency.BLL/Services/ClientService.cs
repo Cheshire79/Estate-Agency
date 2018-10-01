@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using EstateAgency.BLL.Interface;
-
 using EstateAgency.BLL.Interface.Date.Client;
 using EstateAgency.BLL.Interface.Date.ForManipulate;
 

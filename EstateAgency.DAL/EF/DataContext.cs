@@ -1,11 +1,13 @@
 using System.Data.Entity;
 using System.Linq;
+using EstateAgency.DAL.Entities;
 using EstateAgency.DAL.Interface;
 using EstateAgency.DAL.Interface.Date;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace EstateAgency.DAL.EF
 {
-    public class DataContext : DbContext, IDataContext
+    public class DataContext : IdentityDbContext<ApplicationUser>,IDataContext
     {
         public DataContext(string connection)
             : base(connection)
@@ -23,6 +25,7 @@ namespace EstateAgency.DAL.EF
         }
     }
 
+	//todo
     public class StoreDbInitializer : DropCreateDatabaseIfModelChanges<DataContext>
     {
         protected override void Seed(DataContext db)

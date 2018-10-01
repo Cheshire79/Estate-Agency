@@ -36,6 +36,12 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.2\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.2\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -49,15 +55,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Date\City.cs" />
-    <Compile Include="Date\CityDistrict.cs" />
-    <Compile Include="Date\RealEstate.cs" />
-    <Compile Include="Date\Street.cs" />
+    <Compile Include="Date\EstateAgency\City.cs" />
+    <Compile Include="Date\EstateAgency\CityDistrict.cs" />
+    <Compile Include="Date\EstateAgency\RealEstate.cs" />
+    <Compile Include="Date\EstateAgency\Street.cs" />
+    <Compile Include="Date\Identity\ApplicationRole.cs" />
+    <Compile Include="Date\Identity\ApplicationUser.cs" />
     <Compile Include="IDataContext.cs" />
-    <Compile Include="IFactoryRepository.cs" />
+    <Compile Include="Identity\IIdentityFactoryRepository.cs" />
+    <Compile Include="Identity\IIdentityUnitOfWork.cs" />
+    <Compile Include="Identity\IRoleRepository.cs" />
+    <Compile Include="Identity\IUserRepository .cs" />
+    <Compile Include="IEstateAgencyFactoryRepository.cs" />
     <Compile Include="IReadOnlyRepository.cs" />
     <Compile Include="IRepository.cs" />
-    <Compile Include="IUnitOfWork.cs" />
+    <Compile Include="IEstateAgencyUnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

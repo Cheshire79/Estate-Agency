@@ -1,14 +1,17 @@
 // how to rename classes so the changes accepted in viewes files
 //   await Task.Run(() => todo what is the sence of this ?
+
+//todo id ==null
+//add Is ModelValid
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using AutoMapper;
-using Identity.BLL.Interface;
-using Identity.BLL.Interface.Data;
-using Identity.BLL.Interface.Data.Validation;
+using EstateAgency.BLL.Identity.Interface;
+using EstateAgency.BLL.Identity.Interface.Data;
+using EstateAgency.BLL.Identity.Interface.Data.Validation;
 using Microsoft.AspNet.Identity;
 using WebUI.Mapper;
 using WebUI.Models;
@@ -50,6 +53,7 @@ namespace WebUI.Controllers
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> Roles(string roleId, int page = 1)// todo can be added field for search
         {
+			//todo id ==null
             IQueryable<User> users = await _identityService.GetUsersInRoleAsync(roleId);
             UsersInRoleViewModel viewModel = new UsersInRoleViewModel
             {
@@ -86,9 +90,10 @@ namespace WebUI.Controllers
         }
 
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> AddUsersForRole(string roleId, string returnUrl, int page = 1) // can be added field for search
+        public async Task<ActionResult> AddUsersForRole(string roleId, string returnUrl, int page = 1) // need to  add field for search
         {
-            var role = await _identityService.FindRoleByIdAsync(roleId);
+			//todo id ==null
+			var role = await _identityService.FindRoleByIdAsync(roleId);
             if (role != null)
                 ViewData["RoleName"] = role.Name;
             var usersInRole = await _identityService.GetUsersInRoleAsync(roleId);
@@ -114,7 +119,7 @@ namespace WebUI.Controllers
         [HttpPost]
         [Authorize(Roles = "admin")]
         public async Task<ActionResult> AddUsersForRole(string roleId, string userId, string returnUrl, FormCollection collection)
-        {
+        {//todo tests
             OperationDetails operationDetails = await _identityService.AddUserToRoleAsync(userId, roleId);
             if (operationDetails.Succedeed)
             {
@@ -130,10 +135,10 @@ namespace WebUI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> RemoveUserFromRole(string roleId, string userId, string returnUrl, FormCollection collection)
+        public async Task<ActionResult> RemoveUserFromRole(string roleId, string userId, string returnUrl)
         {
-
-            string currentUserId = HttpContext.User.Identity.GetUserId();
+			//todo id ==null
+			string currentUserId = HttpContext.User.Identity.GetUserId();
             OperationDetails operationDetails = await _identityService.RemoveUserFromRole(currentUserId, userId, roleId);
 
             if (operationDetails.Succedeed)
@@ -151,7 +156,7 @@ namespace WebUI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "admin")]
-        public async Task<ActionResult> DeleteUser(string id, string returnUrl, FormCollection collection)
+        public async Task<ActionResult> DeleteUser(string id, string returnUrl)
         {
 
             string currentUserId = HttpContext.User.Identity.GetUserId();

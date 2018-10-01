@@ -14,9 +14,9 @@ namespace EstateAgency.BLL.Mapper
     {
         private IMapper _mapper;
         private int _cityKievId;
-        private IUnitOfWork _unitOfWork;
+        private IEstateAgencyUnitOfWork _unitOfWork;
 
-        public RealEstatesDataMapper(IUnitOfWork unitOfWork, IMapperFactory mapperFactory)
+        public RealEstatesDataMapper(IEstateAgencyUnitOfWork unitOfWork, IMapperFactory mapperFactory)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapperFactory.CreateMapper();

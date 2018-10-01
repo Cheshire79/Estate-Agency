@@ -1,12 +1,6 @@
 using System;
 using System.Web.Mvc;
 using System.Web.Routing;
-using Identity.BLL.Interface;
-using Identity.DAL.EF;
-using Identity.DAL.Infrastructure;
-using Identity.DAL.Repositories;
-using Identity.BLL.Services;
-using Identity.DAL.Interface;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date.Client;
 using EstateAgency.BLL.Interface.Date.Realtor;
@@ -23,6 +17,12 @@ using WebUI.Mapper;
 using EstateAgency.BLL.Services.RealeEstateOrdering;
 using EstateAgency.BLL.Services.RealEstateForClientFiltering;
 using EstateAgency.BLL.Services.RealEstatetFiltering;
+using EstateAgency.DAL.Interface.Identity;
+using EstateAgency.DAL.Identity.Repository;
+using EstateAgency.DAL.Identity.Infrastructure;
+using EstateAgency.BLL.Identity.Services;
+using EstateAgency.BLL.Identity.Interface;
+using Identity.BLL.Mapper;
 
 namespace WebUI.Infrastructure
 {
@@ -44,9 +44,7 @@ namespace WebUI.Infrastructure
         }
 
         private void AddBindings()
-        {
-            AddBindingsForIdentityDAL();
-            AddBindingsForIdentityBLL();
+        {            
             AddBindingsForEstateAgencyDAL();
             AddBindingsForEstateAgencyBLL();
             _ninjectKernel.Bind<IMapperFactoryWEB>().To<MapperFactoryWEB>().InSingletonScope();
@@ -54,18 +52,27 @@ namespace WebUI.Infrastructure
 
         private void AddBindingsForEstateAgencyDAL()
         {
-            _ninjectKernel.Bind<IDataContext>().To<DataContext>().WithConstructorArgument("connection", _connectionString);
+			 _ninjectKernel.Bind<IDataContext>().To<DataContext>().WithConstructorArgument("connection", _connectionString);			
+			_ninjectKernel.Bind<DataContext>().To<DataContext>().InRequestScope().WithConstructorArgument(_connectionString);
 
-            _ninjectKernel.Bind<IRepository<RealEstate>>().To<RealEstateRepository>();
+			_ninjectKernel.Bind<IEstateAgencyUnitOfWork>().To<EstateAgencyUnitOfWork>().InRequestScope();
+			_ninjectKernel.Bind<IIdentityUnitOfWork>().To<IdentityUnitOfWork>().InRequestScope();
+
+			_ninjectKernel.Bind<IEstateAgencyFactoryRepository>().To<EstateAgencyFactoryRepositor>();
+
+			_ninjectKernel.Bind<IRepository<RealEstate>>().To<RealEstateRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<City>>().To<CityReadOnlyRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<CityDistrict>>().To<CityDistrictReadOnlyRepository>();
             _ninjectKernel.Bind<IReadOnlyRepository<Street>>().To<StreetReadOnlyRepository>();
 
-            _ninjectKernel.Bind<IRealEstatesDataMapper>().To<RealEstatesDataMapper>();
+            _ninjectKernel.Bind<IRealEstatesDataMapper>().To<RealEstatesDataMapper>();            	
 
-            _ninjectKernel.Bind<IUnitOfWork>().To<UnitOfWork>().InRequestScope();
-            _ninjectKernel.Bind<IFactoryRepository>().To<FactoryRepositor>();
-        }
+			_ninjectKernel.Bind<IIdentityFactoryRepository>().To<IdentityFactoryRepository>();
+			
+			_ninjectKernel.Bind<IRoleRepository>().To<RoleRepository>();
+			_ninjectKernel.Bind<IUserRepository>().To<UserRepository>();
+
+		}
 
         private void AddBindingsForEstateAgencyBLL()
         {
@@ -80,22 +87,12 @@ namespace WebUI.Infrastructure
 
 
             _ninjectKernel.Bind<EstateAgency.BLL.Interface.IMapperFactory>().To<EstateAgency.BLL.Mapper.MapperFactory>().InSingletonScope();
-        }
 
-        private void AddBindingsForIdentityDAL()
-        {
-            _ninjectKernel.Bind<IIdentityUnitOfWork<ApplicationUserManager, ApplicationRoleManager>>().To<IdentityUnitOfWork>();
-            _ninjectKernel.Bind<ApplicationContext>().ToSelf()
-                .InRequestScope()
-                .WithConstructorArgument("connection", _connectionString);
-            _ninjectKernel.Bind<IFactoryEntitiesManager<ApplicationUserManager, ApplicationRoleManager, ApplicationContext>>()
-                .To<FactoryEntitiesManager>();
-        }
+			_ninjectKernel.Bind<IIdentityService>().To<IdentityService>();
+			_ninjectKernel.Bind<IIdentityMapperFactory>().To<IdentityMapperFactory>().InSingletonScope();
 
-        private void AddBindingsForIdentityBLL()
-        {
-            _ninjectKernel.Bind<IIdentityService>().To<IdentityService>();
-            _ninjectKernel.Bind<Identity.BLL.Interface.IMapperFactory>().To<Identity.BLL.Mapper.MapperFactory>().InSingletonScope();
-        }
+
+		}
+
     }
 }

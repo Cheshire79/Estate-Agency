@@ -17,12 +17,12 @@ namespace EstateAgency.BLL.Services
 {
     public class RealtorService : IRealtorService
     {
-        private IUnitOfWork _unitOfWork;
+        private IEstateAgencyUnitOfWork _unitOfWork;
         private IMapper _mapper;
         private IRealeEstateSort<RealEstateForRealtorDTO> _realeEstateSort;
         private IRealEstatesDataMapper _realEstatesData;
         private IFilterForRealtor _filter;
-        public RealtorService(IUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData, IFilterForRealtor realEstateForRealtorFilter)
+        public RealtorService(IEstateAgencyUnitOfWork unitOfWork, IMapperFactory mapperFactory, IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData, IFilterForRealtor realEstateForRealtorFilter)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapperFactory.CreateMapper();
