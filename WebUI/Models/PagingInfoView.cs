@@ -2,7 +2,7 @@
 
 namespace WebUI.Models
 {
-    public class PagingInfo
+    public class PagingInfoView
     {
         public int TotalItems { get; set; }
         public int ItemsPerPage { get; set; }
@@ -12,6 +12,5 @@ namespace WebUI.Models
         {
             get { return (int)Math.Ceiling((decimal)TotalItems / ItemsPerPage); }
         }
-        // @Html.PageLinks(Model.PagingInfo, x => Url.Action("List", new { page = x+1 }))
     }
 }

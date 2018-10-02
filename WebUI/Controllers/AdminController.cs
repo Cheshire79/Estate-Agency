@@ -40,7 +40,7 @@ namespace WebUI.Controllers
                          Users = _mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>(await _identityService.GetUsers().
                 OrderBy(x => x.Name).Skip((page - 1) * PageSize)
                .Take(PageSize).ToListAsync()),
-                         PagingInfo = new PagingInfo
+                         PagingInfo = new PagingInfoView
                          {
                              CurrentPage = page,
                              ItemsPerPage = PageSize,
@@ -60,7 +60,7 @@ namespace WebUI.Controllers
                 Users = _mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>(
                                         await users.OrderBy(x => x.Name).Skip((page - 1) * PageSize).Take(PageSize).ToListAsync()
                                                ),
-                PagingInfo = new PagingInfo
+                PagingInfo = new PagingInfoView
                 {
                     CurrentPage = page,
                     ItemsPerPage = PageSize,
@@ -104,7 +104,7 @@ namespace WebUI.Controllers
                             await _identityService.GetUsers().Except(usersInRole).OrderBy(x => x.Name)
                             .Skip((page - 1) * PageSize).Take(PageSize).ToListAsync()
                                         ),
-                PagingInfo = new PagingInfo
+                PagingInfo = new PagingInfoView
                 {
                     CurrentPage = page,
                     ItemsPerPage = PageSize,

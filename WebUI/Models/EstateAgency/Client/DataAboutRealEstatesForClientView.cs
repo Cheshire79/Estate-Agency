@@ -7,6 +7,6 @@ namespace WebUI.Models.EstateAgency.Client
         public ChoosenSearchParametrsForClientView ChoosenSearchParametersForRealtor;
         public DataForSearchParametersClientView SearchParameters;
         public List<RealEstateForClientView> RealEstates;
-        public PagingInfo PagingInfo { get; set; }
+        public PagingInfoView PagingInfo { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace WebUI.Mapper
                 cfg.CreateMap<CityDistrictDropItemView, CityDistrictDTO>();
                 cfg.CreateMap<CityDistrictDTO, CityDistrictDropItemView>();
 
-                cfg.CreateMap<ChoosenSearchParametrsForRealtorView, ChoosenSearchParametersForRealtorDTO>();
+                cfg.CreateMap<ChoosenSearchParametersForRealtorView, ChoosenSearchParametersForRealtorDTO>();
 
                 cfg.CreateMap<RealEstateToSaveView, RealEstateDTO>()
                 .ForMember(dest => dest.CreationDate, options => options.Ignore())
@@ -49,7 +49,8 @@ namespace WebUI.Mapper
                 cfg.CreateMap<DataForSearchParametersRealtorView, DataForSearchParametersRealtorDTO>();
                 cfg.CreateMap<DataForManipulateRealEstateDTO, DataForManipulateRealEstateView>().ForMember(dest => dest.ReturnUrl, options => options.Ignore());
 
-            });
+				cfg.CreateMap<DataAboutRealEstatesForRealtorDTO, DataAboutRealEstatesForRealtorView>();
+			});
             _mapper = config.CreateMapper();
         }
 

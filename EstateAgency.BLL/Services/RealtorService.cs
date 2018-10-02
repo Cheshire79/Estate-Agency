@@ -18,7 +18,8 @@ namespace EstateAgency.BLL.Services
 	public class RealtorService : IRealtorService
 	{
 		private IEstateAgencyUnitOfWork _unitOfWork;
-		
+
+		private const int _itemsOnPage = 8;
 
 		private IMapper _mapper;
 		private IRealeEstateSort<RealEstateForRealtorDTO> _realeEstateSort;
@@ -356,7 +357,7 @@ namespace EstateAgency.BLL.Services
 			await _unitOfWork.SaveAsync();
 		}
 
-		public IQueryable<RealEstateForRealtorDTO> FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters)
+		public async Task<DataAboutRealEstatesForRealtorDTO> FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters)
 		{
 			IQueryable<RealEstateForRealtorDTO> realEstates =
 				 from realEstate in _filter.FilteredRealEstates(_realEstatesData.RealEstates(), parameters, userId)
@@ -388,7 +389,25 @@ namespace EstateAgency.BLL.Services
 					 DistrictId = district.Id,
 					 StreetId = street.Id
 				 };
-			return _realeEstateSort.Sort(parameters.SortOrder)(realEstates); ;
+
+			IQueryable<RealEstateForRealtorDTO> result = _realeEstateSort.Sort(parameters.SortOrder)(realEstates);
+
+			 
+
+			DataAboutRealEstatesForRealtorDTO dataForRealtor = new DataAboutRealEstatesForRealtorDTO
+			{
+				ChoosenSearchParametersForRealtor = parameters,
+				RealEstates = await result.Skip((parameters.Page - 1) * _itemsOnPage).Take(_itemsOnPage).ToListAsync(),
+				SearchParameters =await InitiateSearchParameters(),
+				PagingInfo = new PagingInfoDTO
+				{
+					CurrentPage = parameters.Page,
+					ItemsPerPage = _itemsOnPage,
+					TotalItems = await result.CountAsync()
+				}
+			};
+
+			return dataForRealtor; 
 		}
 
 		private async Task<RealEstateForRealtorDTO> FindRealEstateById(int id, string userId)

@@ -1,12 +1,9 @@
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using EstateAgency.BLL.Identity.Interface;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date;
@@ -14,11 +11,9 @@ using EstateAgency.BLL.Interface.Date.ForManipulate;
 using EstateAgency.BLL.Interface.Date.Realtor;
 using Microsoft.AspNet.Identity;
 using WebUI.Mapper;
-using WebUI.Models;
 using WebUI.Models.EstateAgency.ForManipulate;
 using WebUI.Models.EstateAgency.Realtor;
 using WebUI.Models.Realtor;
-using WebUI.Models.UsersAndRoles;
 
 namespace WebUI.Controllers
 {
@@ -27,7 +22,7 @@ namespace WebUI.Controllers
         private IRealtorService _realtorService;
         private IIdentityService _identityService;
         private IMapper _mapper;
-        private int _pageSize = 8;
+       
 
         public RealtorController(IRealtorService realtorService, IIdentityService identityService, IMapperFactoryWEB mapperFactory)
         {
@@ -42,14 +37,14 @@ namespace WebUI.Controllers
             string userId = HttpContext.User.Identity.GetUserId();
             await _realtorService.SetInitialData(userId);
 
-            ChoosenSearchParametrsForRealtorView searchParameters = new ChoosenSearchParametrsForRealtorView();
+            ChoosenSearchParametersForRealtorView searchParameters = new ChoosenSearchParametersForRealtorView();
             DataAboutRealEstatesForRealtorView dataForRealtor = await PreparedDataAboutRealEstates(searchParameters);
             return View(dataForRealtor);
         }
 
         [HttpPost]
         [Authorize(Roles = "realtor")]
-        public async Task<ActionResult> RealEstates(ChoosenSearchParametrsForRealtorView searchParametersForRealtor)
+        public async Task<ActionResult> RealEstates(ChoosenSearchParametersForRealtorView searchParametersForRealtor)
         {
             DataAboutRealEstatesForRealtorView dataForRealtor;
             if (ModelState.IsValid)
@@ -57,7 +52,7 @@ namespace WebUI.Controllers
                 dataForRealtor = await PreparedDataAboutRealEstates(searchParametersForRealtor);
                 return View(dataForRealtor);
             }
-            searchParametersForRealtor = new ChoosenSearchParametrsForRealtorView();
+            searchParametersForRealtor = new ChoosenSearchParametersForRealtorView();
             dataForRealtor = await PreparedDataAboutRealEstates(searchParametersForRealtor);
             return View(dataForRealtor);
         }
@@ -133,41 +128,15 @@ namespace WebUI.Controllers
             throw new HttpException(400, "Invalid value of district Id");
         }
 
-        private async Task<DataAboutRealEstatesForRealtorView> PreparedDataAboutRealEstates(ChoosenSearchParametrsForRealtorView choosenSearchParameters)
+        private async Task<DataAboutRealEstatesForRealtorView> PreparedDataAboutRealEstates(ChoosenSearchParametersForRealtorView choosenSearchParameters)
         {
-            ChoosenSearchParametersForRealtorDTO choosenSearchParametersDTO = _mapper.Map<ChoosenSearchParametrsForRealtorView, ChoosenSearchParametersForRealtorDTO>
+            ChoosenSearchParametersForRealtorDTO choosenSearchParametersDTO = _mapper.Map<ChoosenSearchParametersForRealtorView, ChoosenSearchParametersForRealtorDTO>
                        (choosenSearchParameters);
             string userId = HttpContext.User.Identity.GetUserId();
-            var users = await _identityService.GetUsers().ProjectTo<UserViewModel>(_mapper.ConfigurationProvider).ToListAsync();
-
-            List<RealEstateForRealtorDTO> realEstatesDTO = await _realtorService.FormRealEstates(userId, choosenSearchParametersDTO)
-                .Skip((choosenSearchParameters.Page - 1) * _pageSize)
-                .Take(_pageSize).ToListAsync();
-
-            List<RealEstateForRealtorView> realEstates =
-                _mapper.Map<List<RealEstateForRealtorDTO>, List<RealEstateForRealtorView>>(realEstatesDTO);
-
-            realEstates = realEstates.Join(users, r => r.RealtorId, u => u.Id, (r, u) =>
-             {
-                 r.RealtorName = u.Name;
-                 r.RealtorEmail = u.Email;
-                 return r;
-             }).ToList();
-
-            DataAboutRealEstatesForRealtorView dataForRealtor = new DataAboutRealEstatesForRealtorView
-            {
-                ChoosenSearchParametersForRealtor = choosenSearchParameters,
-                RealEstates = realEstates,
-                SearchParameters = _mapper.Map<DataForSearchParametersRealtorDTO, DataForSearchParametersRealtorView>(await _realtorService.InitiateSearchParameters()),
-                PagingInfo = new PagingInfo
-                {
-                    CurrentPage = choosenSearchParameters.Page,
-                    ItemsPerPage = _pageSize,
-                    TotalItems = await _realtorService.FormRealEstates(userId, choosenSearchParametersDTO).CountAsync()
-                }
-            };
-            return dataForRealtor;
-        }
+			DataAboutRealEstatesForRealtorDTO dataForRealtor = await _realtorService.FormRealEstates(userId, choosenSearchParametersDTO);
+		 
+			return _mapper.Map<DataAboutRealEstatesForRealtorDTO, DataAboutRealEstatesForRealtorView>(dataForRealtor);
+		}
 
         [Authorize(Roles = "realtor")]
         public async Task<ActionResult> EditRealEstate(int? id, string returnUrl)

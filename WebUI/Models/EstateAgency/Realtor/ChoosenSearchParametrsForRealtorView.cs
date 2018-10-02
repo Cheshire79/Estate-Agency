@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebUI.Models.EstateAgency.Realtor
 {
-    public class ChoosenSearchParametrsForRealtorView
+    public class ChoosenSearchParametersForRealtorView
     {
         public int? DistrictId { get; set; } = null;
         public byte? RoomNumber { get; set; } = null;

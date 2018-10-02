@@ -12,7 +12,7 @@
 @using (Html.BeginForm("RealEstates", "Realtor", FormMethod.Post, new { id = "searchForm" }))
 {
 
-    ChoosenSearchParametrsForRealtorView searchParametersForRealtor = new ChoosenSearchParametrsForRealtorView();
+    ChoosenSearchParametersForRealtorView searchParametersForRealtor = new ChoosenSearchParametersForRealtorView();
     SelectList districts = new SelectList(Model.SearchParameters.Districts, "Id", "Name", Model.ChoosenSearchParametersForRealtor.DistrictId);
     SelectList roomsNumber = new SelectList(Model.SearchParameters.RoomNumbers, "Id", "Name", Model.ChoosenSearchParametersForRealtor.RoomNumber);
     SelectList sortedOrders = new SelectList(Model.SearchParameters.SortOrders, "Id", "Name", Model.ChoosenSearchParametersForRealtor.SortOrder);

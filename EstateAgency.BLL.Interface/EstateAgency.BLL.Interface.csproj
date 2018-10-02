@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Date\PagingInfoDTO.cs" />
+    <Compile Include="Date\Realtor\DataAboutRealEstatesForRealtorDTO.cs" />
     <Compile Include="Identity\Data\Role.cs" />
     <Compile Include="Identity\Data\User.cs" />
     <Compile Include="Identity\Data\Validation\OperationDetails.cs" />

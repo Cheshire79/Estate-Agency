@@ -9,7 +9,7 @@ namespace WebUI.HtmlHelpers
     {
         public static MvcHtmlString PageLinks(
             this HtmlHelper html,
-            PagingInfo pagingInfo,
+            PagingInfoView pagingInfo,
             Func<int, string> pageUrl)
         {
             StringBuilder result = new StringBuilder();
@@ -27,7 +27,7 @@ namespace WebUI.HtmlHelpers
 
         public static MvcHtmlString PageLinksUsingSubmitForm(
             this HtmlHelper html,
-            PagingInfo pagingInfo,
+            PagingInfoView pagingInfo,
             string functionName)
         {
             StringBuilder result = new StringBuilder();

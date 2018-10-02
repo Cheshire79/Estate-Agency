@@ -14,7 +14,7 @@ namespace EstateAgency.BLL.Interface
         Task<List<StreetDropDownItemDTO>> GetStreetsForDropDownByDistrctId(int districtId);
         Task Create(RealEstateDTO realEstateDTO,string realtorId);
         Task Save(RealEstateDTO realEstateDTO);
-        IQueryable<RealEstateForRealtorDTO> FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters);
+		Task<DataAboutRealEstatesForRealtorDTO>  FormRealEstates(string userId, ChoosenSearchParametersForRealtorDTO parameters);
         Task<EditRealEstateDTO> GetDataForRealEstateEditing(int id, string userId);
         Task<DataForSearchParametersRealtorDTO> InitiateSearchParameters();
         Task<DataForManipulateRealEstateDTO> GetDataForRealEstateManipulate(int? specifiedDistrictId = null, int? specifiedStreetId = null, byte? specifiedRoomNumber=null);

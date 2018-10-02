@@ -5,9 +5,9 @@ namespace WebUI.Models.EstateAgency.Realtor
 {
     public class DataAboutRealEstatesForRealtorView
     {
-        public ChoosenSearchParametrsForRealtorView ChoosenSearchParametersForRealtor;
+        public ChoosenSearchParametersForRealtorView ChoosenSearchParametersForRealtor;
         public DataForSearchParametersRealtorView SearchParameters;
         public List<RealEstateForRealtorView> RealEstates;
-        public PagingInfo PagingInfo { get; set; }
+        public PagingInfoView PagingInfo { get; set; }
     }
 }

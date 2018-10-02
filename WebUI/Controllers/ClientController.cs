@@ -76,7 +76,7 @@ namespace WebUI.Controllers
                 ChoosenSearchParametersForRealtor = choosenSearchParameters,
                 RealEstates = realEstates,
                 SearchParameters = _mapper.Map<DataForSearchParametersClientDTO, DataForSearchParametersClientView>(await _clientService.InitiateSearchParameters()),
-                PagingInfo = new PagingInfo
+                PagingInfo = new PagingInfoView
                 {
                     CurrentPage = choosenSearchParameters.Page,
                     ItemsPerPage = _pageSize,

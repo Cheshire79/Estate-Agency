@@ -21,6 +21,6 @@ namespace EstateAgency.BLL.Interface.Date.Realtor
         public Int16? HeightFrom;
         public Int16? HeightTo;
         public bool ShowOnlyMyOwn = false;
-        public int? Page;
+        public int Page;
     }
 }
