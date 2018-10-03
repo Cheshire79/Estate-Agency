@@ -25,7 +25,7 @@ namespace EstateAgency.BLL.Services
 		private IRealeEstateSort<RealEstateForRealtorDTO> _realeEstateSort;
 		private IRealEstatesDataMapper _realEstatesData;
 		private IFilterForRealtor _filter;
-		public RealtorService(IEstateAgencyUnitOfWork unitOfWorkFactory, IMapperFactory mapperFactory,
+		public RealtorService(IEstateAgencyUnitOfWork unitOfWorkFactory, IBLLMapper mapperFactory,
 								IRealeEstateSort<RealEstateForRealtorDTO> realeEstateSort, IRealEstatesDataMapper realEstatesData,
 								IFilterForRealtor realEstateForRealtorFilter)
 		{
@@ -363,7 +363,7 @@ namespace EstateAgency.BLL.Services
 				 from realEstate in _filter.FilteredRealEstates(_realEstatesData.RealEstates(), parameters, userId)
 				 join street in _realEstatesData.Streets() on realEstate.StreetId equals street.Id
 				 join district in _filter.FilteredDistricts(_realEstatesData.KievDistricts(), parameters) on street.CityDistrictId equals district.Id
-				  join user in _unitOfWork.Users.GetAll()//.ProjectTo<User>(_mapper.ConfigurationProvider) //todo
+				  join user in _realEstatesData.Users() 
 			on userId equals user.Id
 
 				 select new RealEstateForRealtorDTO
@@ -380,7 +380,7 @@ namespace EstateAgency.BLL.Services
 					 Description = realEstate.Description,
 					 IsSold = realEstate.IsSold,
 					 RealtorId = realEstate.RealtorId,
-					 RealtorName = user.UserName,
+					 RealtorName = user.Name,
 					 RealtorEmail = user.Email,
 					 StreetName = street.Name,
 					 DistrictName = district.Name,

@@ -2,7 +2,7 @@ using AutoMapper;
 
 namespace EstateAgency.BLL.Interface
 {
-    public interface IMapperFactory
+    public interface IBLLMapper
     {
         IMapper CreateMapper();
     }

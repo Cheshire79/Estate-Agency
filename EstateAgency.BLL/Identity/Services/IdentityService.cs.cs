@@ -23,18 +23,18 @@ namespace EstateAgency.BLL.Identity.Services
 		private IIdentityUnitOfWork _unitOfWork { get; set; }
 		private IMapper _mapper;
 
-		public IdentityService(IIdentityUnitOfWork unitOfWork, IIdentityMapperFactory mapperFactory)
+		public IdentityService(IIdentityUnitOfWork unitOfWork, IIdentityBLLMapper mapperFactory)
 		{
 			_unitOfWork = unitOfWork;
 			_mapper = mapperFactory.CreateMapper();
 		}
 
-		public async Task<OperationDetails> Create(User userDto)
+		public async Task<OperationDetails> Create(UserDTO userDto)
 		{
 			ApplicationUser user = await _unitOfWork.UserRepository.FindByNameAsync(userDto.Name);
 			if (user == null)
 			{
-				user = _mapper.Map<User, ApplicationUser>(userDto);
+				user = _mapper.Map<UserDTO, ApplicationUser>(userDto);
 				user.Id = new ApplicationUser().Id;
 				await _unitOfWork.UserRepository.CreateAsync(user, userDto.Password);
 				await _unitOfWork.UserRepository.AddToRoleAsync(user.Id, userDto.RoleByDefault);
@@ -47,7 +47,7 @@ namespace EstateAgency.BLL.Identity.Services
 			}
 		}
 
-		public async Task<ClaimsIdentity> Authenticate(User userDto)
+		public async Task<ClaimsIdentity> Authenticate(UserDTO userDto)
 		{
 			ClaimsIdentity claim = null;
 			ApplicationUser user = await _unitOfWork.UserRepository.FindAsync(userDto.Name, userDto.Password);
@@ -57,14 +57,14 @@ namespace EstateAgency.BLL.Identity.Services
 			return claim;
 		}
 
-		public IQueryable<User> GetUsers()
+		public IQueryable<UserDTO> GetUsers()
 		{
-			return _unitOfWork.UserRepository.Users().ProjectTo<User>(_mapper.ConfigurationProvider);
+			return _unitOfWork.UserRepository.Users().ProjectTo<UserDTO>(_mapper.ConfigurationProvider);
 		}
 
-		public IQueryable<Role> GetRoles()
+		public IQueryable<RoleDTO> GetRoles()
 		{
-			return _unitOfWork.RoleRepository.Roles().ProjectTo<Role>(_mapper.ConfigurationProvider);
+			return _unitOfWork.RoleRepository.Roles().ProjectTo<RoleDTO>(_mapper.ConfigurationProvider);
 		}
 
 		public async Task<OperationDetails> ChangePassword(string userId, string oldPassword, string newPassword)
@@ -81,13 +81,13 @@ namespace EstateAgency.BLL.Identity.Services
 			}
 		}
 
-		public async Task<Role> FindRoleByIdAsync(string id)
+		public async Task<RoleDTO> FindRoleByIdAsync(string id)
 		{
 			var role = await _unitOfWork.RoleRepository.FindByIdAsync(id);
-			return _mapper.Map<ApplicationRole, Role>(role);
+			return _mapper.Map<ApplicationRole, RoleDTO>(role);
 		}
 
-		public async Task<IQueryable<User>> GetUsersInRoleAsync(string roleId)
+		public async Task<IQueryable<UserDTO>> GetUsersInRoleAsync(string roleId)
 		{
 
 			var role = await _unitOfWork.RoleRepository.FindByIdAsync(roleId);
@@ -97,10 +97,10 @@ namespace EstateAgency.BLL.Identity.Services
 			{
 				return (from user in _unitOfWork.UserRepository.Users()
 						where user.Roles.Any(r => r.RoleId == roleId)
-						select user).ProjectTo<User>(_mapper.ConfigurationProvider);
+						select user).ProjectTo<UserDTO>(_mapper.ConfigurationProvider);
 			}
 			//todo handle situation with wrong role id !
-			return _unitOfWork.UserRepository.Users().ProjectTo<User>(_mapper.ConfigurationProvider);
+			return _unitOfWork.UserRepository.Users().ProjectTo<UserDTO>(_mapper.ConfigurationProvider);
 
 		}
 
@@ -146,12 +146,12 @@ namespace EstateAgency.BLL.Identity.Services
 			}
 			await _unitOfWork.SaveAsync();
 
-			var userDto = new User() { Name = "Admin", Password = "111111" };
+			var userDto = new UserDTO() { Name = "Admin", Password = "111111" };
 
 			ApplicationUser user = await _unitOfWork.UserRepository.FindByNameAsync(userDto.Name);
 			if (user == null)
 			{
-				user = _mapper.Map<User, ApplicationUser>(userDto);
+				user = _mapper.Map<UserDTO, ApplicationUser>(userDto);
 				user.Id = new ApplicationUser().Id;
 				user.Email = "test@test.com";
 				var result = await _unitOfWork.UserRepository.CreateAsync(user, userDto.Password);

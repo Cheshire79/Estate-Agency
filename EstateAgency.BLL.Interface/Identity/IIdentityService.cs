@@ -10,12 +10,12 @@ namespace EstateAgency.BLL.Identity.Interface
 {
     public interface IIdentityService : IDisposable
     {
-        Task<OperationDetails> Create(User userDto);
-        Task<ClaimsIdentity> Authenticate(User user);
-        IQueryable<User> GetUsers();
-        IQueryable<Role> GetRoles();
-        Task<Role> FindRoleByIdAsync(string id);
-        Task<IQueryable<User>> GetUsersInRoleAsync(string roleId);
+        Task<OperationDetails> Create(UserDTO userDto);
+        Task<ClaimsIdentity> Authenticate(UserDTO user);
+        IQueryable<UserDTO> GetUsers();
+        IQueryable<RoleDTO> GetRoles();
+        Task<RoleDTO> FindRoleByIdAsync(string id);
+        Task<IQueryable<UserDTO>> GetUsersInRoleAsync(string roleId);
         Task<OperationDetails> AddUserToRoleAsync(string userId, string roleId);
         Task<OperationDetails> RemoveUserFromRole(string currentUserId, string userId, string roleId);
         Task<OperationDetails> DeleteUser(string currentUserId, string userId);

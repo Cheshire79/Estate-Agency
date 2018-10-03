@@ -234,7 +234,7 @@ namespace EstateAgency.BLLTest
             unitOfWork.Setup(x => x.CityDistricts).Returns(cityDistrictReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.Streets).Returns(streetReadOnlyRepository.Object);
             unitOfWork.Setup(x => x.RealEstates).Returns(realEstateRepository.Object);
-            var mapperFactory =new MapperFactory();
+            var mapperFactory =new BLLMapper();
             _realtorService = new RealtorService(unitOfWork.Object, mapperFactory, new RealeEstateSort<RealEstateForRealtorDTO>(),new RealEstatesDataMapper(unitOfWork.Object, mapperFactory),new FilterForRealtor());
         }
 

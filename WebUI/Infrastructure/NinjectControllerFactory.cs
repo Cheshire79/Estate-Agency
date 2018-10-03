@@ -92,10 +92,10 @@ namespace WebUI.Infrastructure
             
 
 
-            _ninjectKernel.Bind<IMapperFactory>().To<MapperFactory>().InSingletonScope();
+            _ninjectKernel.Bind<IBLLMapper>().To<BLLMapper>().InSingletonScope();
 
 			_ninjectKernel.Bind<IIdentityService>().To<IdentityService>();
-			_ninjectKernel.Bind<IIdentityMapperFactory>().To<IdentityMapperFactory>().InSingletonScope();
+			_ninjectKernel.Bind<IIdentityBLLMapper>().To<IdentityBLLMapper>().InSingletonScope();
 
 
 		}

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using EstateAgency.BLL.Identity.Interface.Data;
 using EstateAgency.BLL.Interface;
 using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.ForManipulate;
@@ -16,7 +17,7 @@ namespace EstateAgency.BLL.Mapper
         private int _cityKievId;
         private IEstateAgencyUnitOfWork _unitOfWork;
 
-        public RealEstatesDataMapper(IEstateAgencyUnitOfWork unitOfWork, IMapperFactory mapperFactory)
+        public RealEstatesDataMapper(IEstateAgencyUnitOfWork unitOfWork, IBLLMapper mapperFactory)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapperFactory.CreateMapper();
@@ -44,7 +45,12 @@ namespace EstateAgency.BLL.Mapper
             return _unitOfWork.Streets.GetAll().ProjectTo<StreetDTO>(_mapper.ConfigurationProvider);
         }
 
-        public List<RoomNumberDownItemDTO> Rooms()
+		public IQueryable<UserDTO> Users()
+		{
+			return _unitOfWork.Users.GetAll().ProjectTo<UserDTO>(_mapper.ConfigurationProvider);
+		}
+
+		public List<RoomNumberDownItemDTO> Rooms()
         {
             return new List<RoomNumberDownItemDTO>()
             {

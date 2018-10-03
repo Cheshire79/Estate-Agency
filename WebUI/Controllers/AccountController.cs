@@ -42,7 +42,7 @@ namespace WebUI.Controllers
           
             if (ModelState.IsValid)
             {
-                User userDto = _mapper.Map<UserLoginViewModel, User> (model);
+                UserDTO userDto = _mapper.Map<UserLoginViewModel, UserDTO> (model);
                 if (await TryToSignInAsync(userDto, model.RememberMe))
                     return RedirectToLocal(returnUrl);
                 ModelState.AddModelError("", "Invalid username or password.");
@@ -50,7 +50,7 @@ namespace WebUI.Controllers
             return View(model);
         }
 
-        private async Task<bool> TryToSignInAsync(User userDto, bool rememberMe)
+        private async Task<bool> TryToSignInAsync(UserDTO userDto, bool rememberMe)
         {
             ClaimsIdentity claim = await _identityService.Authenticate(userDto);
             if (claim == null)
@@ -75,7 +75,7 @@ namespace WebUI.Controllers
             await _identityService.SetInitialData();          
             if (ModelState.IsValid)
             {
-                User userDto=_mapper.Map<UserRegisterViewModel, User>(model);
+                UserDTO userDto=_mapper.Map<UserRegisterViewModel, UserDTO>(model);
                 userDto.RoleByDefault = roleByDefault;
                 OperationDetails operationDetails = await _identityService.Create(userDto);
                 if (operationDetails.Succedeed)

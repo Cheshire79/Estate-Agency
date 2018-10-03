@@ -37,7 +37,7 @@ namespace WebUI.Controllers
             UsersViewModel viewModel =
                      new UsersViewModel
                      {
-                         Users = _mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>(await _identityService.GetUsers().
+                         Users = _mapper.Map<IEnumerable<UserDTO>, IEnumerable<UserViewModel>>(await _identityService.GetUsers().
                 OrderBy(x => x.Name).Skip((page - 1) * PageSize)
                .Take(PageSize).ToListAsync()),
                          PagingInfo = new PagingInfoView
@@ -54,10 +54,10 @@ namespace WebUI.Controllers
         public async Task<ActionResult> Roles(string roleId, int page = 1)// todo can be added field for search
         {
 			//todo id ==null
-            IQueryable<User> users = await _identityService.GetUsersInRoleAsync(roleId);
+            IQueryable<UserDTO> users = await _identityService.GetUsersInRoleAsync(roleId);
             UsersInRoleViewModel viewModel = new UsersInRoleViewModel
             {
-                Users = _mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>(
+                Users = _mapper.Map<IEnumerable<UserDTO>, IEnumerable<UserViewModel>>(
                                         await users.OrderBy(x => x.Name).Skip((page - 1) * PageSize).Take(PageSize).ToListAsync()
                                                ),
                 PagingInfo = new PagingInfoView
@@ -79,7 +79,7 @@ namespace WebUI.Controllers
         {
             RolesMenuViewModel rolesMenu = new RolesMenuViewModel()
             {
-                Roles = _mapper.Map<IEnumerable<Role>, IEnumerable<RoleViewModel>>
+                Roles = _mapper.Map<IEnumerable<RoleDTO>, IEnumerable<RoleViewModel>>
                                         (
                                 _identityService.GetRoles().OrderBy(x => x.Name)
                                         ),
@@ -99,7 +99,7 @@ namespace WebUI.Controllers
             var usersInRole = await _identityService.GetUsersInRoleAsync(roleId);
             UsersForAddingIntoRoleViewModel viewModel = new UsersForAddingIntoRoleViewModel
             {
-                Users = _mapper.Map<IEnumerable<User>, IEnumerable<UserViewModel>>
+                Users = _mapper.Map<IEnumerable<UserDTO>, IEnumerable<UserViewModel>>
                                         (
                             await _identityService.GetUsers().Except(usersInRole).OrderBy(x => x.Name)
                             .Skip((page - 1) * PageSize).Take(PageSize).ToListAsync()

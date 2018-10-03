@@ -80,7 +80,7 @@ namespace Identity.BLLTest
 
             //   uow.Setup(u => u.SaveAsync()).Returns(Task.Run(() => { }));
 
-            service = new IdentityService(uow.Object, new IdentityMapperFactory());
+            service = new IdentityService(uow.Object, new IdentityBLLMapper());
         }
 
 

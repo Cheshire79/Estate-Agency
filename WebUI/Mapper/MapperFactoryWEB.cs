@@ -20,14 +20,14 @@ namespace WebUI.Mapper
             {
                 // source , destination
 
-                cfg.CreateMap<User, UserViewModel>();
-                cfg.CreateMap<Role, RoleViewModel>();
+                cfg.CreateMap<UserDTO, UserViewModel>();
+                cfg.CreateMap<RoleDTO, RoleViewModel>();
 
-                cfg.CreateMap<UserLoginViewModel, User>().ForMember(x => x.Name,
+                cfg.CreateMap<UserLoginViewModel, UserDTO>().ForMember(x => x.Name,
                     x => x.MapFrom(m => m.UserName)).ForMember(x => x.Password,
                     x => x.MapFrom(m => m.Password));
 
-                cfg.CreateMap<UserRegisterViewModel, User>().ForMember(x => x.Name,
+                cfg.CreateMap<UserRegisterViewModel, UserDTO>().ForMember(x => x.Name,
                     x => x.MapFrom(m => m.UserName)).ForMember(x => x.Password,
                     x => x.MapFrom(m => m.Password));
 

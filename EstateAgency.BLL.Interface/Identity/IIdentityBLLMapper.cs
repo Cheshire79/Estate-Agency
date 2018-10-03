@@ -2,8 +2,8 @@ using AutoMapper;
 
 namespace EstateAgency.BLL.Identity.Interface
 {
-    public interface IIdentityMapperFactory
-    {
+    public interface IIdentityBLLMapper
+	{
         IMapper CreateMapper();
     }
 }

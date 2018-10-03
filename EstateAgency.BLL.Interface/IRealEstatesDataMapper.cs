@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using EstateAgency.BLL.Identity.Interface.Data;
 using EstateAgency.BLL.Interface.Date;
 using EstateAgency.BLL.Interface.Date.ForManipulate;
 
@@ -12,6 +13,7 @@ namespace EstateAgency.BLL.Interface
         IQueryable<RealEstateDTO> RealEstates();
         IQueryable<StreetDTO> Streets();
         List<RoomNumberDownItemDTO> Rooms();
+		IQueryable<UserDTO> Users();
 
-    }
+	}
 }
